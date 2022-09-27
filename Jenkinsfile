@@ -70,7 +70,7 @@ pipeline {
 
         stage('Build Manual Service Docker Image') {
             steps {
-                sh 'dotnet build "Tgs.GameRecord.SBOManualService/Tgs.GameRecord.SBOManualService.csproj" -c $BuildConfiguration -t:ContainerBuild -p:DockerfileTag="$ImageName:${TAG}" --no-restore '
+                sh 'dotnet build "Tgs.GameRecord.SBOManualService/Tgs.GameRecord.SBOManualService.csproj" -c $BuildConfiguration -t:ContainerBuild -p:DockerfileTag="$ImageManualName:${TAG}" --no-restore '
             }
         }
 
