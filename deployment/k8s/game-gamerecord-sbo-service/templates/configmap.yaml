@@ -27,7 +27,7 @@ data:
       },
       "GameRecord": {
          "GameProvidersQueryServerBaseUrl": "http://game-gameprovider-queryserver/",
-         "GameInterfaceSBOBaseUrl": "http://game-gameinterface-sbo-service:9090/"
+         "GameInterfaceBaseUrl": "http://game-gameinterface-sbo-service:9090/"
       }
     }
   monitor.settings.json: |
