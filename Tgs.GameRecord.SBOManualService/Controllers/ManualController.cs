@@ -6,8 +6,8 @@ using Tgs.ServiceUtility;
 namespace Tgs.GameRecord.SBOManualService.Controllers;
 
 [ApiController]
-[Route("sbotf")]
-public class SBOTransferController : ControllerBase
+[Route("[controller]")]
+public class ManualController : ControllerBase
 {
     /// <summary>
     /// Games the history by sports book asynchronous.
