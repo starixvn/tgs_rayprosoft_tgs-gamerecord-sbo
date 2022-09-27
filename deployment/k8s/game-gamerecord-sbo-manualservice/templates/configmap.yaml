@@ -12,8 +12,8 @@ data:
         "MaxIntervalMinute": 30,
         "IntervalMinute": 3,
         "LockMinute": 2,
-        "MongoDefine": "gp.gamerecord.database.schedule",
-        "MongoGlobPattern": "tgs.gp.gamerecord.database.schedule.sbotf",
+        "MongoDefine":  "gp.gamerecord.database.manual",
+        "MongoGlobPattern": "tgs.gp.gamerecord.database.manual.sbotf",
         "GameExternals": [
           {
             "Portfolio": "SportsBook",
