@@ -1,0 +1,25 @@
+﻿namespace Tgs.GameRecord.SBOService.Core;
+
+public record GameRecordMessage(
+    string ExternalRoundId,
+    Guid GameProviderId,
+    string GameProviderCode,
+    int GameId,
+    string ExternalGameId,
+    string PlayerCode,
+    string CurrencyCode,
+    Guid WalletId,
+    Guid BrandId,
+    Guid GameProviderConfigurationId,
+    GameRoundStatus Status,
+    GameRoundClientStatus ClientStatus,
+    DateTimeOffset ExternalCreatedOn,
+    DateTimeOffset? ExternalClosedOn,
+    decimal Bet,
+    decimal ValidBet,
+    decimal Settle,
+    decimal Commission,
+    decimal Turnover,
+    decimal PlayerWinLoss,
+    string AdditionalData,
+    bool Success);

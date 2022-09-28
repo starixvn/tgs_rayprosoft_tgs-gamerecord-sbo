@@ -6,14 +6,14 @@ namespace Tgs.GameRecord.SBOService.Core.DispatchServices;
 
 internal class ScheduleDispatchService : ICommandService<ScheduleDispatchCommand>
 {
-    private readonly ICommandService<ScheduleWorkerCommand> _commandService;
+    private readonly ICommandService<GameHistoryWorkerCommand> _commandService;
     private readonly GameRecordInfoOptions _gameRecordInfoOptions;
     private readonly double _intervalMinute;
     private readonly IScheduleDispatch _scheduleDispatch;
 
     public ScheduleDispatchService(
         IOptions<GameRecordInfoOptions> options,
-        ICommandService<ScheduleWorkerCommand> commandService,
+        ICommandService<GameHistoryWorkerCommand> commandService,
         IScheduleDispatch scheduleDispatch
         )
     {
@@ -45,7 +45,7 @@ internal class ScheduleDispatchService : ICommandService<ScheduleDispatchCommand
 
                     var startTime = endTime.AddMinutes(_intervalMinute * -1);
 
-                    var workerCommand = new ScheduleWorkerCommand(
+                    var workerCommand = new GameHistoryWorkerCommand(
                          ApiUrl: command.ApiUrl,
                          CompanyKey: command.CompanyKey,
                          Agent: command.Agent,

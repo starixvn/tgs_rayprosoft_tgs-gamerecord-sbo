@@ -8,9 +8,9 @@ namespace Tgs.GameRecord.SBOManualService;
 
 public class ManualMessageHandler : IMessageProcessor
 {
-    private readonly ICommandService<ManualWorkerCommand> _service;
+    private readonly ICommandService<GameHistoryWorkerCommand> _service;
 
-    public ManualMessageHandler(ICommandService<ManualWorkerCommand> service)
+    public ManualMessageHandler(ICommandService<GameHistoryWorkerCommand> service)
     {
         _service = service ?? throw new ArgumentNullException(nameof(service));
     }
@@ -20,7 +20,7 @@ public class ManualMessageHandler : IMessageProcessor
         var json = Encoding.UTF8.GetString(data.Span);
         var request = JsonSerializer.Deserialize<ManualMessageRequest>(json)!;
 
-        var gameRecordCommand = new ManualWorkerCommand(
+        var gameRecordCommand = new GameHistoryWorkerCommand(
             request.ApiUrl,
             request.CompanyKey,
             request.Agent,

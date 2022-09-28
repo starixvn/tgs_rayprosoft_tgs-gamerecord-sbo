@@ -7,17 +7,17 @@ using Tgs.ServiceUtility;
 
 namespace Tgs.GameRecord.SBOService.Core.WorkerServices;
 
-internal class ManualWorkerService : ICommandService<ManualWorkerCommand>
+internal class GameHistoryWorkerService : ICommandService<GameHistoryWorkerCommand>
 {
     private readonly IGameInterfaceSBOClient _client;
-    private readonly ILogger<ManualWorkerService> _logger;
+    private readonly ILogger<GameHistoryWorkerService> _logger;
     private readonly ICommandService<GamePullRecordCommand> _service;
     private readonly GameRecordInfoOptions _gameRecordInfoOptions;
 
-    public ManualWorkerService(
+    public GameHistoryWorkerService(
         IOptions<GameRecordInfoOptions> options,
         IGameInterfaceSBOClient client,
-        ILogger<ManualWorkerService> logger,
+        ILogger<GameHistoryWorkerService> logger,
         ICommandService<GamePullRecordCommand> service)
     {
         _gameRecordInfoOptions = options.Value;
@@ -26,7 +26,7 @@ internal class ManualWorkerService : ICommandService<ManualWorkerCommand>
         _service = service ?? throw new ArgumentNullException(nameof(service));
     }
 
-    public async ValueTask ExecuteAsync(ManualWorkerCommand command, CancellationToken cancellationToken = default)
+    public async ValueTask ExecuteAsync(GameHistoryWorkerCommand command, CancellationToken cancellationToken = default)
     {
         var gameExternal = _gameRecordInfoOptions.GameExternals.Where(x => x.Portfolio.Equals(command.Portfolio, StringComparison.OrdinalIgnoreCase)).Single();
 

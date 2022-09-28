@@ -52,8 +52,8 @@ internal class GamePullRecordCommandService : ICommandService<GamePullRecordComm
 
             var status = record.Status == GameHistoryStatus.Running ? GameRoundStatus.Open : GameRoundStatus.Closed;
             DateTimeOffset? externalClosedOn = record.Status != GameHistoryStatus.Running ? record.ExternalClosedOn.ToDateTimeOffset() : null;
-            var settleAmount = record.Status != GameHistoryStatus.Running ? record.Settle.ToDecimal() : null;
-            var playerWinLoss = record.Status != GameHistoryStatus.Running ? record.PlayerWinLoss.ToDecimal() : null;
+            var settleAmount = record.Status != GameHistoryStatus.Running ? record.Settle.ToDecimal() : 0;
+            var playerWinLoss = record.Status != GameHistoryStatus.Running ? record.PlayerWinLoss.ToDecimal() : 0;
             var clientStatus =
                 record.Status == GameHistoryStatus.Won
                 ? GameRoundClientStatus.Win
@@ -64,28 +64,28 @@ internal class GamePullRecordCommandService : ICommandService<GamePullRecordComm
                 : record.Status == GameHistoryStatus.Void
                 ? GameRoundClientStatus.Void
                 : GameRoundClientStatus.Open;
-            var data = new GameRoundData(
+            var data = new GameRecordMessage(
                 ExternalRoundId: record.ExternalRoundId,
                 GameProviderId: gameProviderId,
                 GameProviderCode: _gameRecordInfo.GameProviderCode,
-                PlayerCode: (playerModel == null) ? string.Empty : playerModel.PlayerCode,
                 GameId: gameId,
                 ExternalGameId: record.ExternalGameId,
+                PlayerCode: (playerModel == null) ? string.Empty : playerModel.PlayerCode,
                 CurrencyCode: (playerModel == null) ? string.Empty : playerModel.DefaultWalletCurrencyCode,
-                Status: status,
-                GameProviderConfigurationId: gameProviderConfigurationId ?? Guid.Empty,
                 WalletId: (playerModel == null) ? Guid.Empty : playerModel.DefaultWalletId,
-                ExternalCreatedOn: record.ExternalCreatedOn.ToDateTimeOffset(),
-                ExternalClosedOn: record.ExternalClosedOn.ToDateTimeOffset(),
                 BrandId: (playerModel == null) ? Guid.Empty : playerModel.BrandId,
-                BetAmount: record.Bet.ToDecimal(),
-                ValidBetAmount: record.ValidBet.ToDecimal(),
-                SettleAmount: settleAmount,
-                Commission: 0,
-                Turnover: record.Turnover.ToDecimal(),
-                PlayerWinLoss: playerWinLoss,
-                AdditionalData: record.AdditionalData,
+                GameProviderConfigurationId: gameProviderConfigurationId ?? Guid.Empty,
+                Status: status,
                 ClientStatus: clientStatus,
+                ExternalCreatedOn: record.ExternalCreatedOn.ToDateTimeOffset(),
+                ExternalClosedOn: externalClosedOn,
+                Bet: record.Bet.ToDecimal().GetValueOrDefault(0),
+                ValidBet: record.ValidBet.ToDecimal().GetValueOrDefault(0),
+                Settle: settleAmount.GetValueOrDefault(0),
+                Commission: 0,
+                Turnover: record.Turnover.ToDecimal().GetValueOrDefault(0),
+                PlayerWinLoss: playerWinLoss.GetValueOrDefault(0),
+                AdditionalData: record.AdditionalData,
                 Success: success);
 
             var subject = _gameRecordInfo.MongoGlobPattern;

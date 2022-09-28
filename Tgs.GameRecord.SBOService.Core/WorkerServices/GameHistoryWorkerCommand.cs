@@ -1,6 +1,6 @@
 ﻿namespace Tgs.GameRecord.SBOService.Core.WorkerServices;
 
-public record ScheduleWorkerCommand(
+public record GameHistoryWorkerCommand(
     Uri ApiUrl,
     string CompanyKey,
     string Agent,

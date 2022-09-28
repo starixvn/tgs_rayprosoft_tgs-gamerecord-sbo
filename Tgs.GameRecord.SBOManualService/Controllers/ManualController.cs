@@ -30,9 +30,9 @@ public class ManualController : ControllerBase
     /// </remarks>
     [HttpPost("sportsbook")]
     public ValueTask GameHistoryBySportsBookAsync(
-        [FromServices] ICommandService<ManualWorkerCommand> service,
+        [FromServices] ICommandService<GameHistoryWorkerCommand> service,
         GameRecordQueryViewModel model)
-        => service.ExecuteAsync(new ManualWorkerCommand(
+        => service.ExecuteAsync(new GameHistoryWorkerCommand(
             ApiUrl: model.ApiUrl,
             CompanyKey: model.CompanyKey,
             Agent: model.Agent,
@@ -61,9 +61,9 @@ public class ManualController : ControllerBase
     /// </remarks>
     [HttpPost("virtualsports")]
     public ValueTask GameHistoryByVirtualSportsAsync(
-        [FromServices] ICommandService<ManualWorkerCommand> service,
+        [FromServices] ICommandService<GameHistoryWorkerCommand> service,
         GameRecordQueryViewModel model)
-        => service.ExecuteAsync(new ManualWorkerCommand(
+        => service.ExecuteAsync(new GameHistoryWorkerCommand(
             ApiUrl: model.ApiUrl,
             CompanyKey: model.CompanyKey,
             Agent: model.Agent,
