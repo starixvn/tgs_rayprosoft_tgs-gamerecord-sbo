@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-{{ include "game-gamerecord-sbo-service.name" . }}
+  namespace: {{ .Values.namespace }}
+data:
+  appsettings.json: |
+    {
+      "GameRecordInfo": {
+        "GameProviderCode": "SBOTF",
+        "MinIntervalMinute": 1,
+        "MaxIntervalMinute": 30,
+        "IntervalMinute": 3,
+        "LockMinute": 2,
+        "MongoDefine": "gp.gamerecord.database",
+        "MongoGlobPattern": "tgs.gp.gamerecord.database.round.sbotf",
+        "GameExternals": [
+          {
+            "Portfolio": "SportsBook",
+            "GameExternalId": "sports_book"
+          },
+          {
+            "Portfolio": "VirtualSports",
+            "GameExternalId": "virtual_sports"
+          }
+        ]
+      },
+      "GameRecord": {
+         "GameProvidersQueryServerBaseUrl": "http://game-gameprovider-queryserver/",
+         "GameInterfaceBaseUrl": "http://game-gameinterface-sbo-service:9090/"
+      }
+    }
+  monitor.settings.json: |
+    {
+      "Metrics": {
+        "MetricCount": "1"
+      },
+      "Logging":{
+        "Console": {
+          "FormatterName": "json"
+        },
+        "LogLevel": {
+          "Default": "Warning",
+          "Microsoft": "Warning",
+          "Microsoft.Diagnostics": "Warning",
+          "Microsoft.Hosting.Lifetime": "Information"
+        }
+      }
+    }
