@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Options;
 using MongoDB.Bson;
 using Tgs.GameInterface.SBOService.Protos;
+using Tgs.GameRounds.Common;
+using Tgs.GameRounds.Common.MessageModels;
 using Tgs.MessageQueue;
 using Tgs.ServiceUtility;
 
@@ -79,9 +81,9 @@ internal class GamePullRecordCommandService : ICommandService<GamePullRecordComm
                 ClientStatus: clientStatus,
                 ExternalCreatedOn: record.ExternalCreatedOn.ToDateTimeOffset(),
                 ExternalClosedOn: externalClosedOn,
-                Bet: record.Bet.ToDecimal().GetValueOrDefault(0),
-                ValidBet: record.ValidBet.ToDecimal().GetValueOrDefault(0),
-                Settle: settleAmount.GetValueOrDefault(0),
+                BetAmount: record.Bet.ToDecimal().GetValueOrDefault(0),
+                ValidBetAmount: record.ValidBet.ToDecimal().GetValueOrDefault(0),
+                SettleAmount: settleAmount.GetValueOrDefault(0),
                 Commission: 0,
                 Turnover: record.Turnover.ToDecimal().GetValueOrDefault(0),
                 PlayerWinLoss: playerWinLoss.GetValueOrDefault(0),
