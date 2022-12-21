@@ -6,8 +6,8 @@ namespace Tgs.GameRecord.SBOService.Core;
 
 internal class UtensilRepository : IUtensil
 {
-    private readonly GameRecordInfoOptions _gameRecordInfo;
     private readonly IGameProvidersQueryServerClient _client;
+    private readonly GameRecordInfoOptions _gameRecordInfo;
 
     public UtensilRepository(
          IOptions<GameRecordInfoOptions> options,

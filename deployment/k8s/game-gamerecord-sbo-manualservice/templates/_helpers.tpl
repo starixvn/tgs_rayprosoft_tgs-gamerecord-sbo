@@ -47,10 +47,10 @@ Selector labels
 */}}
 {{- define "game-gamerecord-sbo-manualservice.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "game-gamerecord-sbo-manualservice.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
 app: {{ include "game-gamerecord-sbo-manualservice.name" . }}
 tgs.kind: game
 tgs.game.kind: gamerecord
+tgs.gamerecord.kind: manualservice
 tgs.gameprovider.kind: sbo
 {{- end }}
 

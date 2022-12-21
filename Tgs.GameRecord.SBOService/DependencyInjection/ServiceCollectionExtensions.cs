@@ -1,7 +1,7 @@
 ﻿using Tgs.GameInterface.SBOService.Client;
 using Tgs.GameProviders.QueryServer.Client;
-using Tgs.GameRecord.SBOService.Core;
 using Tgs.GameRecord.SBOService;
+using Tgs.GameRecord.SBOService.Core;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

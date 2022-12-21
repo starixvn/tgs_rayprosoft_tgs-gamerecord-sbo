@@ -10,9 +10,9 @@ namespace Tgs.GameRecord.SBOService.Core.WorkerServices;
 internal class GameHistoryWorkerService : ICommandService<GameHistoryWorkerCommand>
 {
     private readonly IGameInterfaceSBOClient _client;
+    private readonly GameRecordInfoOptions _gameRecordInfoOptions;
     private readonly ILogger<GameHistoryWorkerService> _logger;
     private readonly ICommandService<GamePullRecordCommand> _service;
-    private readonly GameRecordInfoOptions _gameRecordInfoOptions;
 
     public GameHistoryWorkerService(
         IOptions<GameRecordInfoOptions> options,

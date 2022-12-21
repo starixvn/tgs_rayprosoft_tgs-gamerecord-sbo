@@ -3,7 +3,6 @@ using System.Text.Json;
 using Tgs.GameRecord.SBOService.Core.DispatchServices;
 using Tgs.MessageQueue;
 using Tgs.ServiceUtility;
-using Tgs.GameRecord.SBOService;
 
 namespace Tgs.GameRecord.SBOService;
 
