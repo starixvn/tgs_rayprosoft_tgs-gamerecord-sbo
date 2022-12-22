@@ -6,10 +6,6 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>e98b3093-5605-41f5-aca1-d1555cf83a04</UserSecretsId>
 		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-		<GlobalNugetConfig>$(UserProfile)\AppData\Roaming\NuGet\NuGet.Config</GlobalNugetConfig>
-		<GlobalNugetConfig Condition="'$(UserProfile)'==''">$(HOME)/.nuget/NuGet/NuGet.Config</GlobalNugetConfig>
-		<DockerfileBuildArguments>--build-arg "BuildConfiguration=$(Configuration)" --secret id=nuget,src="$(GlobalNugetConfig)"</DockerfileBuildArguments>
-		<DockerfileTag Condition="$(DockerfileTag) == ''">game/gamerecord-sbo-manual-service</DockerfileTag>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

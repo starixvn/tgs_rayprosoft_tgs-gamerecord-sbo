@@ -50,7 +50,7 @@ app.kubernetes.io/name: {{ include "game-gamerecord-sbo-service.name" . }}
 app: {{ include "game-gamerecord-sbo-service.name" . }}
 tgs.kind: game
 tgs.game.kind: gamerecord
-tgs.gamerecord.kind: manualservice
+tgs.gamerecord.kind: service
 tgs.gameprovider.kind: sbo
 {{- end }}
 
