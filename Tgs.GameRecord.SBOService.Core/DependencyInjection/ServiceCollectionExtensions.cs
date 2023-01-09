@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
-using StackExchange.Redis;
+using Tgs.GameCommand.Client;
 using Tgs.GameInterface.SBOService.Client;
-using Tgs.GameProviders.QueryServer.Client;
 using Tgs.GameRecord.SBOService.Core;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -10,20 +9,28 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddGameRecordCore(
         this IServiceCollection services,
+        Action<RedisOptions, IServiceProvider> redisDBconfigure,
         Action<GameRecordInfoOptions, IServiceProvider> gameRecordInfoOptions,
+        Action<MongoSettingOptions, IServiceProvider> mongoSettingOptions,
         Action<GameInterfaceSBOClientOptions, IServiceProvider> gameInterfaceSBOClientOptions,
-        Action<GameProvidersQueryServerClientOptions, IServiceProvider> gameProvidersQueryServerClientOptions,
-        Func<IServiceProvider, IDatabase> redisDatabaseResolver)
+        Action<GameCommandClientOptions, IServiceProvider> gameCommandClientOptions)
         => services
+            .AddOptions<RedisOptions>()
+            .Configure(redisDBconfigure)
+            .Services
             .AddOptions<GameRecordInfoOptions>()
             .Configure(gameRecordInfoOptions)
+            .Services
+            .AddOptions<MongoSettingOptions>()
+            .Configure(mongoSettingOptions)
             .Services
             .RegisterAllServiceUtilityTypes(
                 Assembly.GetExecutingAssembly(),
                 ServiceLifetime.Transient)
+            .AddMemoryCache()
+            .AddSingleton<RedisConnectionManager>()
             .AddGameInterfaceSBOServiceClient(gameInterfaceSBOClientOptions)
-            .AddGameProvidersQueryServerClient(gameProvidersQueryServerClientOptions)
-            .AddTransient<IScheduleDispatch>(sp => ActivatorUtilities.CreateInstance<ScheduleDispatch>(sp, redisDatabaseResolver(sp)))
-            .AddTransient<IUtensil, UtensilRepository>()
-            .Decorate<IUtensil>((innerRepository, sp) => ActivatorUtilities.CreateInstance<UtensilMemoryCacheRepository>(sp, innerRepository, TimeSpan.FromHours(1)));
+            .AddGameCommandClient(gameCommandClientOptions)
+            .AddTransient<IScheduleDispatch>(sp => ActivatorUtilities.CreateInstance<ScheduleDispatch>(sp, sp.GetRequiredService<RedisConnectionManager>().Database))
+            .AddTransient<IUtensil>(sp => ActivatorUtilities.CreateInstance<UtensilRepository>(sp, TimeSpan.FromHours(1)));
 }

@@ -1,4 +1,4 @@
-﻿namespace Tgs.GameRecord.SBOManualService;
+﻿namespace Tgs.GameRecord.SBOService.Core;
 
 public record RedisOptions
 {

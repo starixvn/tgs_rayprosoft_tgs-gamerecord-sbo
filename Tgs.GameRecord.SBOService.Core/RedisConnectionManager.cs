@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using StackExchange.Redis;
 
-namespace Tgs.GameRecord.SBOService;
+namespace Tgs.GameRecord.SBOService.Core;
 
 internal class RedisConnectionManager : IDisposable
 {

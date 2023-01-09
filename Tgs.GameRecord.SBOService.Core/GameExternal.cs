@@ -1,6 +1,6 @@
 ﻿namespace Tgs.GameRecord.SBOService.Core;
 
-public class GameExternal
+public record GameExternal
 {
     public string GameExternalId { get; init; } = default!;
 

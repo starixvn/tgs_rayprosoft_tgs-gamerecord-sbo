@@ -20,11 +20,11 @@ internal class ScheduleDispatchService : ICommandService<ScheduleDispatchCommand
         _gameRecordInfoOptions = options.Value;
         _commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
         _scheduleDispatch = scheduleDispatch ?? throw new ArgumentNullException(nameof(scheduleDispatch));
-        _intervalMinute = (_gameRecordInfoOptions.IntervalMinute > _gameRecordInfoOptions.MaxIntervalMinute)
-                        ? _gameRecordInfoOptions.MaxIntervalMinute
-                        : (_gameRecordInfoOptions.IntervalMinute < _gameRecordInfoOptions.MinIntervalMinute)
-                        ? _gameRecordInfoOptions.MinIntervalMinute
-                        : _gameRecordInfoOptions.IntervalMinute;
+        _intervalMinute = (_gameRecordInfoOptions.IntervalMinutes > _gameRecordInfoOptions.IntervalMinutesMax)
+                        ? _gameRecordInfoOptions.IntervalMinutesMax
+                        : (_gameRecordInfoOptions.IntervalMinutes < _gameRecordInfoOptions.IntervalMinutesMinimum)
+                        ? _gameRecordInfoOptions.IntervalMinutesMinimum
+                        : _gameRecordInfoOptions.IntervalMinutes;
     }
 
     public async ValueTask ExecuteAsync(ScheduleDispatchCommand command, CancellationToken cancellationToken = default)

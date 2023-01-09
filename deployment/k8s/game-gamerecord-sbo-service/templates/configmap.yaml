@@ -8,12 +8,6 @@ data:
     {
       "GameRecordInfo": {
         "GameProviderCode": "SBOTF",
-        "MinIntervalMinute": 1,
-        "MaxIntervalMinute": 30,
-        "IntervalMinute": 3,
-        "LockMinute": 2,
-        "MongoDefine": "gp.gamerecord.database",
-        "MongoGlobPattern": "tgs.gp.gamerecord.database.round.sbotf",
         "GameExternals": [
           {
             "Portfolio": "SportsBook",
@@ -23,10 +17,14 @@ data:
             "Portfolio": "VirtualSports",
             "GameExternalId": "virtual_sports"
           }
-        ]
+        ],
+        "IntervalMinutes": 5,
+        "IntervalMinutesMax": 15,
+        "IntervalMinutesMinimum": 3,
+        "LockMinute": 2
       },
       "GameRecord": {
-         "GameProvidersQueryServerBaseUrl": "http://game-gameprovider-queryserver/",
+         "GameCommandClientBaseUrl": "http://game-gamecommand/",
          "GameInterfaceBaseUrl": "http://game-gameinterface-sbo-service:9090/"
       }
     }
