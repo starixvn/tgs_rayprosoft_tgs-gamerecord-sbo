@@ -21,7 +21,7 @@ data:
         "IntervalMinutes": 5,
         "IntervalMinutesMax": 15,
         "IntervalMinutesMinimum": 3,
-        "LockMinute": 2
+        "LockMinute": 3
       },
       "GameRecord": {
          "GameCommandClientBaseUrl": "http://game-gamecommand/",
