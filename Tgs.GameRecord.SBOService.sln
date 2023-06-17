@@ -3,20 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "方案項目", "方案項目", "{B2751747-D25A-48ED-ADC7-B9C93525A597}"
-	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-		CodeMaid.config = CodeMaid.config
-		nuget.config = nuget.config
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.SBOService.Core", "Tgs.GameRecord.SBOService.Core\Tgs.GameRecord.SBOService.Core.csproj", "{4811EBA6-02E2-4BB1-80D5-08E7A2329E31}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.SBOManualService", "Tgs.GameRecord.SBOManualService\Tgs.GameRecord.SBOManualService.csproj", "{3749F7BF-1FA7-4659-8A12-F985D78CD7D0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.SBOService", "Tgs.GameRecord.SBOService\Tgs.GameRecord.SBOService.csproj", "{3662E6B9-F13C-4563-9F57-44AA0F6A5CC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.GameRecord.SBOService.Core.UnitTest", "Tgs.GameRecord.SBOService.Core.UnitTest\Tgs.GameRecord.SBOService.Core.UnitTest.csproj", "{24EBC52D-2B9C-4155-B3B3-B7E621AF250F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.GameRecord.SBOService.Core.UnitTest", "Tgs.GameRecord.SBOService.Core.UnitTest\Tgs.GameRecord.SBOService.Core.UnitTest.csproj", "{24EBC52D-2B9C-4155-B3B3-B7E621AF250F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,10 +19,6 @@ Global
 		{4811EBA6-02E2-4BB1-80D5-08E7A2329E31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4811EBA6-02E2-4BB1-80D5-08E7A2329E31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4811EBA6-02E2-4BB1-80D5-08E7A2329E31}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3749F7BF-1FA7-4659-8A12-F985D78CD7D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3749F7BF-1FA7-4659-8A12-F985D78CD7D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3749F7BF-1FA7-4659-8A12-F985D78CD7D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3749F7BF-1FA7-4659-8A12-F985D78CD7D0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3662E6B9-F13C-4563-9F57-44AA0F6A5CC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3662E6B9-F13C-4563-9F57-44AA0F6A5CC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3662E6B9-F13C-4563-9F57-44AA0F6A5CC8}.Release|Any CPU.ActiveCfg = Release|Any CPU

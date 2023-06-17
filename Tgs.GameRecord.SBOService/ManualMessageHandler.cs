@@ -4,7 +4,7 @@ using Tgs.GameRecord.SBOService.Core.WorkerServices;
 using Tgs.MessageQueue;
 using Tgs.ServiceUtility;
 
-namespace Tgs.GameRecord.SBOManualService;
+namespace Tgs.GameRecord.SBOService;
 
 public class ManualMessageHandler : IMessageProcessor
 {

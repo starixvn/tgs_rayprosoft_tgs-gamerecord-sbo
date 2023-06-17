@@ -28,6 +28,7 @@ public static class ServiceCollectionExtensions
                 Assembly.GetExecutingAssembly(),
                 ServiceLifetime.Transient)
             .AddMemoryCache()
+            .AddGameRoundsWorkClient()
             .AddSingleton<RedisConnectionManager>()
             .AddGameInterfaceSBOServiceClient(gameInterfaceSBOClientOptions)
             .AddGameCommandClient(gameCommandClientOptions)

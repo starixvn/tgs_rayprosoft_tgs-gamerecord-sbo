@@ -1,8 +1,9 @@
-﻿namespace Tgs.GameRecord.SBOManualService.ViewModels;
+﻿namespace Tgs.GameRecord.SBOService;
 
-public record GameRecordQueryViewModel(
+public record ManualMessageRequest(
     Uri ApiUrl,
     string CompanyKey,
     string Agent,
+    string Portfolio,
     DateTimeOffset StartTime,
     DateTimeOffset EndTime);
