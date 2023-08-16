@@ -2,6 +2,6 @@
 
 namespace Tgs.GameRecord.SBOService.Core.ApplicationServices;
 
-public record ScheduleHandleRecordCommand(
+public record PullRecordCommand(
     string GameExternalId,
-    GameHistoryInfo Record);
+    IEnumerable<GameHistoryInfo> Records);

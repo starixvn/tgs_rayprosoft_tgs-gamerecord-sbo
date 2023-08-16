@@ -12,13 +12,13 @@ internal class GameHistoryWorkerService : ICommandService<GameHistoryWorkerComma
     private readonly IGameInterfaceSBOClient _client;
     private readonly GameRecordInfoOptions _gameRecordInfoOptions;
     private readonly ILogger<GameHistoryWorkerService> _logger;
-    private readonly ICommandService<GamePullRecordCommand> _service;
+    private readonly ICommandService<PullRecordCommand> _service;
 
     public GameHistoryWorkerService(
         IOptions<GameRecordInfoOptions> options,
         IGameInterfaceSBOClient client,
         ILogger<GameHistoryWorkerService> logger,
-        ICommandService<GamePullRecordCommand> service)
+        ICommandService<PullRecordCommand> service)
     {
         _gameRecordInfoOptions = options.Value;
         _client = client ?? throw new ArgumentNullException(nameof(client));
@@ -60,7 +60,7 @@ internal class GameHistoryWorkerService : ICommandService<GameHistoryWorkerComma
             return;
         }
 
-        var gamePullRecordCommand = new GamePullRecordCommand(
+        var gamePullRecordCommand = new PullRecordCommand(
                 GameExternalId: gameExternal.GameExternalId,
                 Records: gameHistoryInfos);
 
