@@ -15,7 +15,7 @@ public class HandleRecordCommandServiceUnitTest
     {
         var gameRecordInfo = Options.Create(new GameRecordInfoOptions
         {
-            GameProviderCode = "SABATF",
+            GameProviderCode = "SBOTF",
             GameExternals = new[]
             {
                 new GameExternal
@@ -96,7 +96,7 @@ public class HandleRecordCommandServiceUnitTest
     {
         var gameRecordInfo = Options.Create(new GameRecordInfoOptions
         {
-            GameProviderCode = "SABATF",
+            GameProviderCode = "SBOTF",
             GameExternals = new[]
             {
                 new GameExternal
@@ -124,18 +124,18 @@ public class HandleRecordCommandServiceUnitTest
             GameExternalId: "sports_book",
             Record: new GameHistoryInfo
             {
-                ExternalRoundId = "148204004",
-                PlayerCode = "4uisqakfevb5",
+                ExternalRoundId = "4606913",
+                PlayerCode = "4ugse0rsnufp",
                 ExternalGameId = "Football",
                 Status = GameHistoryStatus.Running,
-                ExternalCreatedOn = DateTimeOffset.Parse("2023-09-20T07:56:21.58+00:00").ToTimestamp(),
-                ExternalClosedOn = DateTimeOffset.UnixEpoch.ToTimestamp(),
-                Bet = 1219.0m,
-                ValidBet = 1219.0m,
+                ExternalCreatedOn = DateTimeOffset.Parse("2023-09-20T23:45:18.127+00:00").ToTimestamp(),
+                ExternalClosedOn = DateTimeOffset.Parse("0001-01-01T00:00:00+00:00").ToTimestamp(),
+                Bet = 5.0m,
+                ValidBet = 5.0m,
                 PlayerWinLoss = 0.0m,
                 Turnover = 0.0m,
                 Settle = 0.0m,
-                AdditionalData = "{\"subBet\":[{\"betOption\":\"Buriram United\",\"marketType\":\"Handicap\",\"sportType\":\"Football\",\"hdp\":0.25,\"odds\":0.1,\"league\":\"AFC CHAMPIONS LEAGUE\",\"match\":\"Buriram United vs Zhejiang Pro\",\"status\":\"running\",\"winlostDate\":\"2023-09-20T00:00:00\",\"liveScore\":\"4:1\",\"htScore\":\"3:1\",\"ftScore\":\"0:0\",\"customeizedBetType\":\"\",\"kickOffTime\":\"2023-09-20T06:00:00\",\"isHalfWonLose\":false}],\"sportsType\":\"Football\",\"odds\":0.1,\"oddsStyle\":\"H\",\"isLive\":true,\"maxWinWithoutActualStake\":121.9,\"ip\":\"219.76.15.132\",\"isSystemTagRisky\":false,\"isCustomerTagRisky\":false,\"voidReason\":\"\",\"isCashOut\":false,\"actualStake\":1219.0,\"turnover\":1219.0,\"isHalfWonLose\":true,\"turnoverByStake\":1219.0,\"turnoverByActualStake\":1219.0,\"netTurnoverByStake\":609.5,\"netTurnoverByActualStake\":609.5,\"orderTime\":\"2023-09-20T07:56:21.58\",\"modifyDate\":\"2023-09-20T07:59:59.41\",\"settleTime\":\"2023-09-20T07:59:59.41\",\"winLostDate\":\"2023-09-20T00:00:00\",\"refNo\":\"148204004\",\"username\":\"PROD_4uisqakfevb5\",\"currency\":\"HKD\",\"stake\":1219.0,\"winLost\":60.95,\"status\":\"won\",\"topDownline\":null}"
+                AdditionalData = "{\"subBet\":[{\"betOption\":\"Over\",\"marketType\":\"Over/Under\",\"sportType\":\"Football\",\"hdp\":6.0,\"odds\":-0.95,\"league\":\"USA Major League Soccer\",\"match\":\"LA Galaxy vs Minnesota United\",\"status\":\"running\",\"winlostDate\":\"2023-09-21T00:00:00\",\"liveScore\":\"1:3\",\"htScore\":\"0:0\",\"ftScore\":\"0:0\",\"customeizedBetType\":\"\",\"kickOffTime\":\"2023-09-20T22:30:00\",\"isHalfWonLose\":false}],\"sportsType\":\"Football\",\"odds\":-0.95,\"oddsStyle\":\"M\",\"isLive\":true,\"maxWinWithoutActualStake\":5.0,\"ip\":\"114.33.41.237\",\"isSystemTagRisky\":false,\"isCustomerTagRisky\":false,\"voidReason\":\"\",\"isCashOut\":false,\"actualStake\":4.75,\"turnover\":5.0,\"isHalfWonLose\":false,\"turnoverByStake\":5.0,\"turnoverByActualStake\":4.75,\"netTurnoverByStake\":0.0,\"netTurnoverByActualStake\":0.0,\"orderTime\":\"2023-09-20T23:45:18.127\",\"modifyDate\":\"2023-09-20T23:45:25.98\",\"settleTime\":\"0001-01-01T00:00:00\",\"winLostDate\":\"0001-01-01T00:00:00\",\"refNo\":\"4606913\",\"username\":\"STAG_4ugse0rsnufp\",\"currency\":\"CNY\",\"stake\":5.0,\"winLost\":0.0,\"status\":\"running\",\"topDownline\":null}"
             });
 
         var service = new HandleRecordCommandService(
@@ -177,7 +177,7 @@ public class HandleRecordCommandServiceUnitTest
     {
         var gameRecordInfo = Options.Create(new GameRecordInfoOptions
         {
-            GameProviderCode = "SABATF",
+            GameProviderCode = "SBOTF",
             GameExternals = new[]
             {
                 new GameExternal
