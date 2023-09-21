@@ -9,18 +9,18 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 ARG BuildConfiguration=Release
 WORKDIR /src
 COPY ["nuget.config", "."]
-COPY ["Tgs.GameRecord.SBOService/Tgs.GameRecord.SBOService.csproj", "Tgs.GameRecord.SBOService/"]
-COPY ["Tgs.GameRecord.SBOService.Core/Tgs.GameRecord.SBOService.Core.csproj", "Tgs.GameRecord.SBOService.Core/"]
-RUN dotnet restore "Tgs.GameRecord.SBOService/Tgs.GameRecord.SBOService.csproj"
+COPY ["Tgs.GameRecord.SBO/Tgs.GameRecord.SBO.csproj", "Tgs.GameRecord.SBO/"]
+COPY ["Tgs.GameRecord.SBO.Core/Tgs.GameRecord.SBO.Core.csproj", "Tgs.GameRecord.SBO.Core/"]
+RUN dotnet restore "Tgs.GameRecord.SBO/Tgs.GameRecord.SBO.csproj"
 COPY . .
-WORKDIR "/src/Tgs.GameRecord.SBOService"
-RUN dotnet build "Tgs.GameRecord.SBOService.csproj" -c $BuildConfiguration -o /app/build
+WORKDIR "/src/Tgs.GameRecord.SBO"
+RUN dotnet build "Tgs.GameRecord.SBO.csproj" -c $BuildConfiguration -o /app/build
 
 FROM build AS publish
 ARG BuildConfiguration
-RUN dotnet publish "Tgs.GameRecord.SBOService.csproj" -c $BuildConfiguration -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Tgs.GameRecord.SBO.csproj" -c $BuildConfiguration -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Tgs.GameRecord.SBOService.dll"]
+ENTRYPOINT ["dotnet", "Tgs.GameRecord.SBO.dll"]
