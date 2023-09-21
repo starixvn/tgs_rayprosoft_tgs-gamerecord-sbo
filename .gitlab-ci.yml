@@ -1,8 +1,8 @@
 variables:
-  ImageName: pgtgs/game-gamerecord-sbo-service
-  TgsSettingKey: game-gamerecord-sbo-service
-  HelmTemplateFolderName: game-gamerecord-sbo-service
-  BuildCacheKey: Tgs.GameRecord.SBOService.$CI_PIPELINE_ID
+  ImageName: pgtgs/game-gamerecord-sbo
+  TgsSettingKey: game-gamerecord-sbo
+  HelmTemplateFolderName: game-gamerecord-sbo
+  BuildCacheKey: Tgs.GameRecord.SBO.$CI_PIPELINE_ID
 
 default:
   before_script:
@@ -59,7 +59,7 @@ push-docker-image:
     untracked: true   
     policy: pull
   script:
-    - dotnet build "Tgs.GameRecord.SBOService/Tgs.GameRecord.SBOService.csproj" -c $BuildConfiguration -t:ContainerBuild -p:DockerfileTag="$ImageName:$Tag" --no-restore
+    - dotnet build "Tgs.GameRecord.SBO/Tgs.GameRecord.SBO.csproj" -c $BuildConfiguration -t:ContainerBuild -p:DockerfileTag="$ImageName:$Tag" --no-restore
     - docker push $ImageName:$Tag
 
 push-k8s-template:
