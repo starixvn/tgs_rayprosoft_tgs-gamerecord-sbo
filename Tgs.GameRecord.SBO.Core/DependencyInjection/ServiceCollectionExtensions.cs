@@ -15,21 +15,22 @@ public static class ServiceCollectionExtensions
         Action<GameInterfaceSBOClientOptions, IServiceProvider> gameInterfaceSBOClientOptions,
         Action<GameCommandClientOptions, IServiceProvider> gameCommandClientOptions)
         => services
-            .AddOptions<RedisOptions>()
-            .Configure(redisDBconfigure)
-            .Services
-            .AddOptions<GameRecordInfoOptions>()
-            .Configure(gameRecordInfoOptions)
-            .Services
-            .AddOptions<MongoSettingOptions>()
-            .Configure(mongoSettingOptions)
-            .Services
-            .RegisterAllServiceUtilityTypes(
-                Assembly.GetExecutingAssembly(),
-                ServiceLifetime.Transient)
-            .AddGameRecordHandleClient()
-            .AddSingleton<RedisConnectionManager>()
-            .AddGameInterfaceSBOServiceClient(gameInterfaceSBOClientOptions)
-            .AddGameCommandClient(gameCommandClientOptions)
-            .AddTransient<IScheduleDispatch>(sp => ActivatorUtilities.CreateInstance<ScheduleDispatch>(sp, sp.GetRequiredService<RedisConnectionManager>().Database));
+        .AddOptions<RedisOptions>()
+        .Configure(redisDBconfigure)
+        .Services
+        .AddOptions<GameRecordInfoOptions>()
+        .Configure(gameRecordInfoOptions)
+        .Services
+        .AddOptions<MongoSettingOptions>()
+        .Configure(mongoSettingOptions)
+        .Services
+        .RegisterAllServiceUtilityTypes(
+            Assembly.GetExecutingAssembly(),
+            ServiceLifetime.Transient)
+        .AddSingleton<RedisConnectionManager>()
+        .AddGameCommandClient(gameCommandClientOptions)
+        .AddGameInterfaceSBOServiceClient(gameInterfaceSBOClientOptions)
+        .AddGameRecordHandleClient()
+        .AddTransient<IHangfireUtensil, HangfireUtensil>()
+        .AddTransient<IScheduleDispatch>(sp => ActivatorUtilities.CreateInstance<ScheduleDispatch>(sp, sp.GetRequiredService<RedisConnectionManager>().Database));
 }
