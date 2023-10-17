@@ -2,7 +2,6 @@
 using Hangfire.Storage;
 using Microsoft.Extensions.Logging;
 using Tgs.ServiceUtility;
-using Tgs.GameRecord.SBO.Core.JobApplicationServices;
 
 namespace Tgs.GameRecord.SBO.Core.JobApplicationServices;
 

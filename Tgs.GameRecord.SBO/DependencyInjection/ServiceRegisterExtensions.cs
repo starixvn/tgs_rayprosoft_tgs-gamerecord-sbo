@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Tgs.GameInterface.SBOService.Client;
+﻿using Tgs.GameInterface.SBOService.Client;
 using Tgs.GameRecord.SBO.Core;
 
 namespace Microsoft.Extensions.DependencyInjection;

@@ -5,5 +5,5 @@ public record GameHistoryWorkerCommand(
     string CompanyKey,
     string Agent,
     string Portfolio,
-    DateTime StartTime,
-    DateTime EndTime);
+    DateTimeOffset StartTime,
+    DateTimeOffset EndTime);

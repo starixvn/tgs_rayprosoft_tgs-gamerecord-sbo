@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.Options;
-using Google.Protobuf.WellKnownTypes;
+﻿using Google.Protobuf.WellKnownTypes;
+using Microsoft.Extensions.Options;
 using NSubstitute;
 using Tgs.GameInterface.SBOService.Protos;
 using Tgs.GameRecord.Handle.Client;
@@ -41,9 +41,9 @@ public class HandleRecordCommandServiceUnitTest
         var command = new HandleRecordCommand(
 
             GameExternalId: "sports_book",
-            Record: new GameHistoryInfo
+            Info: new GameWagerInfo
             {
-                ExternalRoundId = "147997932",
+                ExternalWagerId = "147997932",
                 PlayerCode = "4ujsi7wb6lqg",
                 ExternalGameId = "Mix Parlay",
                 Status = GameHistoryStatus.Lose,
@@ -67,27 +67,27 @@ public class HandleRecordCommandServiceUnitTest
             .Received(1)
             .MessageAsync(
             gameProviderCode: Arg.Is(gameRecordInfo.Value.GameProviderCode),
-            playerCode: Arg.Is(command.Record.PlayerCode),
+            playerCode: Arg.Is(command.Info.PlayerCode),
             wagerState: Arg.Is(WagerStates.Lose),
             wagerType: Arg.Is(WagerTypes.Normal),
             freeGameState: Arg.Is(FreeGameStates.None),
             gambleState: Arg.Is(GambleStates.None),
             cashoutState: Arg.Is(CashoutStates.None),
             resettleState: Arg.Is(ResettleStates.None),
-            externalRoundId: Arg.Is(command.Record.ExternalRoundId),
-            externalWagerId: Arg.Is(command.Record.ExternalRoundId),
+            externalRoundId: Arg.Is(command.Info.ExternalWagerId),
+            externalWagerId: Arg.Is(command.Info.ExternalWagerId),
             externalGameId: Arg.Is("sports_book"),
-            externalCreatedOn: Arg.Is(command.Record.ExternalCreatedOn.ToDateTimeOffset()),
-            externalClosedOn: Arg.Is(command.Record.ExternalClosedOn.ToDateTimeOffset()),
-            externalPayoffOn: Arg.Is(command.Record.ExternalClosedOn.ToDateTimeOffset()),
+            externalCreatedOn: Arg.Is(command.Info.ExternalCreatedOn.ToDateTimeOffset()),
+            externalClosedOn: Arg.Is(command.Info.ExternalClosedOn.ToDateTimeOffset()),
+            externalPayoffOn: Arg.Is(command.Info.ExternalClosedOn.ToDateTimeOffset()),
             externalResettleOn: Arg.Is(DateTimeOffset.UnixEpoch),
-            bet: Arg.Is(command.Record.Bet.ToDecimal().GetValueOrDefault(0)),
-            validBet: Arg.Is(command.Record.ValidBet.ToDecimal().GetValueOrDefault(0)),
-            settle: Arg.Is(command.Record.Settle.ToDecimal().GetValueOrDefault(0)),
+            bet: Arg.Is(command.Info.Bet.ToDecimal().GetValueOrDefault(0)),
+            validBet: Arg.Is(command.Info.ValidBet.ToDecimal().GetValueOrDefault(0)),
+            settle: Arg.Is(command.Info.Settle.ToDecimal().GetValueOrDefault(0)),
             commission: Arg.Is(0.0m),
-            turnover: Arg.Is(command.Record.Turnover.ToDecimal().GetValueOrDefault(0)),
-            winLoss: Arg.Is(command.Record.PlayerWinLoss.ToDecimal().GetValueOrDefault(0)),
-            additionalData: Arg.Is(command.Record.AdditionalData),
+            turnover: Arg.Is(command.Info.Turnover.ToDecimal().GetValueOrDefault(0)),
+            winLoss: Arg.Is(command.Info.PlayerWinLoss.ToDecimal().GetValueOrDefault(0)),
+            additionalData: Arg.Is(command.Info.AdditionalData),
             cancellationToken: Arg.Any<CancellationToken>());
     }
 
@@ -122,9 +122,9 @@ public class HandleRecordCommandServiceUnitTest
         var command = new HandleRecordCommand(
 
             GameExternalId: "sports_book",
-            Record: new GameHistoryInfo
+            Info: new GameWagerInfo
             {
-                ExternalRoundId = "4606913",
+                ExternalWagerId = "4606913",
                 PlayerCode = "4ugse0rsnufp",
                 ExternalGameId = "Football",
                 Status = GameHistoryStatus.Running,
@@ -148,27 +148,27 @@ public class HandleRecordCommandServiceUnitTest
             .Received(1)
             .MessageAsync(
             gameProviderCode: Arg.Is(gameRecordInfo.Value.GameProviderCode),
-            playerCode: Arg.Is(command.Record.PlayerCode),
+            playerCode: Arg.Is(command.Info.PlayerCode),
             wagerState: Arg.Is(WagerStates.Running),
             wagerType: Arg.Is(WagerTypes.Normal),
             freeGameState: Arg.Is(FreeGameStates.None),
             gambleState: Arg.Is(GambleStates.None),
             cashoutState: Arg.Is(CashoutStates.None),
             resettleState: Arg.Is(ResettleStates.None),
-            externalRoundId: Arg.Is(command.Record.ExternalRoundId),
-            externalWagerId: Arg.Is(command.Record.ExternalRoundId),
+            externalRoundId: Arg.Is(command.Info.ExternalWagerId),
+            externalWagerId: Arg.Is(command.Info.ExternalWagerId),
             externalGameId: Arg.Is("sports_book"),
-            externalCreatedOn: Arg.Is(command.Record.ExternalCreatedOn.ToDateTimeOffset()),
+            externalCreatedOn: Arg.Is(command.Info.ExternalCreatedOn.ToDateTimeOffset()),
             externalClosedOn: Arg.Is(DateTimeOffset.UnixEpoch),
             externalPayoffOn: Arg.Is(DateTimeOffset.UnixEpoch),
             externalResettleOn: Arg.Is(DateTimeOffset.UnixEpoch),
-            bet: Arg.Is(command.Record.Bet.ToDecimal().GetValueOrDefault(0)),
-            validBet: Arg.Is(command.Record.ValidBet.ToDecimal().GetValueOrDefault(0)),
+            bet: Arg.Is(command.Info.Bet.ToDecimal().GetValueOrDefault(0)),
+            validBet: Arg.Is(command.Info.ValidBet.ToDecimal().GetValueOrDefault(0)),
             settle: Arg.Is(0.0m),
             commission: Arg.Is(0.0m),
             turnover: Arg.Is(0.0m),
             winLoss: Arg.Is(0.0m),
-            additionalData: Arg.Is(command.Record.AdditionalData),
+            additionalData: Arg.Is(command.Info.AdditionalData),
             cancellationToken: Arg.Any<CancellationToken>());
     }
 
@@ -203,9 +203,9 @@ public class HandleRecordCommandServiceUnitTest
         var command = new HandleRecordCommand(
 
             GameExternalId: "sports_book",
-            Record: new GameHistoryInfo
+            Info: new GameWagerInfo
             {
-                ExternalRoundId = "148204004",
+                ExternalWagerId = "148204004",
                 PlayerCode = "4uisqakfevb5",
                 ExternalGameId = "Football",
                 Status = GameHistoryStatus.Won,
@@ -229,27 +229,27 @@ public class HandleRecordCommandServiceUnitTest
             .Received(1)
             .MessageAsync(
             gameProviderCode: Arg.Is(gameRecordInfo.Value.GameProviderCode),
-            playerCode: Arg.Is(command.Record.PlayerCode),
+            playerCode: Arg.Is(command.Info.PlayerCode),
             wagerState: Arg.Is(WagerStates.Win),
             wagerType: Arg.Is(WagerTypes.Normal),
             freeGameState: Arg.Is(FreeGameStates.None),
             gambleState: Arg.Is(GambleStates.None),
             cashoutState: Arg.Is(CashoutStates.None),
             resettleState: Arg.Is(ResettleStates.None),
-            externalRoundId: Arg.Is(command.Record.ExternalRoundId),
-            externalWagerId: Arg.Is(command.Record.ExternalRoundId),
+            externalRoundId: Arg.Is(command.Info.ExternalWagerId),
+            externalWagerId: Arg.Is(command.Info.ExternalWagerId),
             externalGameId: Arg.Is("sports_book"),
-            externalCreatedOn: Arg.Is(command.Record.ExternalCreatedOn.ToDateTimeOffset()),
-            externalClosedOn: Arg.Is(command.Record.ExternalClosedOn.ToDateTimeOffset()),
-            externalPayoffOn: Arg.Is(command.Record.ExternalClosedOn.ToDateTimeOffset()),
+            externalCreatedOn: Arg.Is(command.Info.ExternalCreatedOn.ToDateTimeOffset()),
+            externalClosedOn: Arg.Is(command.Info.ExternalClosedOn.ToDateTimeOffset()),
+            externalPayoffOn: Arg.Is(command.Info.ExternalClosedOn.ToDateTimeOffset()),
             externalResettleOn: Arg.Is(DateTimeOffset.UnixEpoch),
-            bet: Arg.Is(command.Record.Bet.ToDecimal().GetValueOrDefault(0)),
-            validBet: Arg.Is(command.Record.ValidBet.ToDecimal().GetValueOrDefault(0)),
-            settle: Arg.Is(command.Record.Settle.ToDecimal().GetValueOrDefault(0)),
+            bet: Arg.Is(command.Info.Bet.ToDecimal().GetValueOrDefault(0)),
+            validBet: Arg.Is(command.Info.ValidBet.ToDecimal().GetValueOrDefault(0)),
+            settle: Arg.Is(command.Info.Settle.ToDecimal().GetValueOrDefault(0)),
             commission: Arg.Is(0.0m),
-            turnover: Arg.Is(command.Record.Turnover.ToDecimal().GetValueOrDefault(0)),
-            winLoss: Arg.Is(command.Record.PlayerWinLoss.ToDecimal().GetValueOrDefault(0)),
-            additionalData: Arg.Is(command.Record.AdditionalData),
+            turnover: Arg.Is(command.Info.Turnover.ToDecimal().GetValueOrDefault(0)),
+            winLoss: Arg.Is(command.Info.PlayerWinLoss.ToDecimal().GetValueOrDefault(0)),
+            additionalData: Arg.Is(command.Info.AdditionalData),
             cancellationToken: Arg.Any<CancellationToken>());
     }
 }

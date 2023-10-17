@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
-using Tgs.ServiceUtility;
 using Tgs.GameRecord.SBO.Core.DispatchServices;
+using Tgs.ServiceUtility;
 using Valhalla.MessageQueue;
 
 namespace Tgs.GameRecord.SBO.Messages;

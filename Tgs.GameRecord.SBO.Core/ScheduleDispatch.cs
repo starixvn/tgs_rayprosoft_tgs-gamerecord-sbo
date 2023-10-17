@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Options;
 using StackExchange.Redis;
-using Tgs.GameRecord.SBO.Core;
 using Tgs.GameRecord.SBO.Core.DispatchServices;
 
 namespace Tgs.GameRecord.SBO.Core;

@@ -2,10 +2,8 @@
 using Microsoft.Extensions.Options;
 using Tgs.GameInterface.SBOService.Client;
 using Tgs.GameInterface.SBOService.Protos;
-using Tgs.ServiceUtility;
-using Tgs.GameRecord.SBO.Core;
 using Tgs.GameRecord.SBO.Core.ApplicationServices;
-using Tgs.GameRecord.SBO.Core.WorkerServices;
+using Tgs.ServiceUtility;
 
 namespace Tgs.GameRecord.SBO.Core.WorkerServices;
 
@@ -34,23 +32,27 @@ internal class GameHistoryWorkerService : ICommandService<GameHistoryWorkerComma
 
         var gameHistoryInfos = gameExternal.Portfolio.Equals("VirtualSports", StringComparison.OrdinalIgnoreCase)
             ? await _client
-                   .GameHistoryByVirtualSportsAsync(
-                       apiUrl: command.ApiUrl,
-                       companyKey: command.CompanyKey,
-                       agent: command.Agent,
-                       startTime: command.StartTime,
-                       endTime: command.EndTime,
-                       cancellationToken: cancellationToken)
-                   .ToArrayAsync(cancellationToken).ConfigureAwait(false) ?? Enumerable.Empty<GameHistoryInfo>()
+            .GameWagerByVirtualSportsAsync(
+                apiUrl: command.ApiUrl,
+                companyKey: command.CompanyKey,
+                agent: command.Agent,
+                startTime: command.StartTime,
+                endTime: command.EndTime,
+                cancellationToken: cancellationToken)
+            .ToArrayAsync(
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false) ?? Enumerable.Empty<GameWagerInfo>()
             : await _client
-                   .GameHistoryBySportsBookAsync(
-                       apiUrl: command.ApiUrl,
-                       companyKey: command.CompanyKey,
-                       agent: command.Agent,
-                       startTime: command.StartTime,
-                       endTime: command.EndTime,
-                       cancellationToken: cancellationToken)
-                   .ToArrayAsync(cancellationToken).ConfigureAwait(false) ?? Enumerable.Empty<GameHistoryInfo>();
+            .GameWagerBySportsBookAsync(
+                apiUrl: command.ApiUrl,
+                companyKey: command.CompanyKey,
+                agent: command.Agent,
+                startTime: command.StartTime,
+                endTime: command.EndTime,
+                cancellationToken: cancellationToken)
+            .ToArrayAsync(
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false) ?? Enumerable.Empty<GameWagerInfo>();
 
         _logger.LogInformation("LogOn:{logOn} | Request:{request} | Response:{response}",
             DateTime.UtcNow.ToString("O"),
@@ -64,7 +66,7 @@ internal class GameHistoryWorkerService : ICommandService<GameHistoryWorkerComma
 
         var gamePullRecordCommand = new PullRecordCommand(
                 GameExternalId: gameExternal.GameExternalId,
-                Records: gameHistoryInfos);
+                Infos: gameHistoryInfos);
 
         await _service
             .ExecuteAsync(

@@ -1,6 +1,4 @@
-﻿using Tgs.GameRecord.SBO.Core;
-
-namespace Tgs.GameRecord.SBO.Core;
+﻿namespace Tgs.GameRecord.SBO.Core;
 
 public record GameRecordInfoOptions
 {

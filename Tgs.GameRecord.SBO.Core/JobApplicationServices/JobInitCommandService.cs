@@ -6,8 +6,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Tgs.GameCommand.Client;
 using Tgs.GameCommand.Common;
-using Tgs.ServiceUtility;
 using Tgs.GameInterface.SBOService.Client;
+using Tgs.ServiceUtility;
 
 namespace Tgs.GameRecord.SBO.Core.JobApplicationServices;
 
@@ -114,7 +114,7 @@ internal class JobInitCommandService : ICommandService<JobInitCommand>
                     .AgentPresetBetSettingsAsync(
                     apiUrl: apiUrl,
                     companyKey: companyKey,
-                    username: agent,
+                    agent: agent,
                     currency: currency,
                     min: min,
                     max: max,

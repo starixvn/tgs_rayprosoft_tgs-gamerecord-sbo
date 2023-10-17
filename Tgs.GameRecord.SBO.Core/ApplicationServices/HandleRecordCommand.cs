@@ -4,4 +4,4 @@ namespace Tgs.GameRecord.SBO.Core.ApplicationServices;
 
 public record HandleRecordCommand(
     string GameExternalId,
-    GameHistoryInfo Record);
+    GameWagerInfo Info);

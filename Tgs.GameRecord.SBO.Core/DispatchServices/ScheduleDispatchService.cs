@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
-using Tgs.ServiceUtility;
-using Tgs.GameRecord.SBO.Core;
-using Tgs.GameRecord.SBO.Core.DispatchServices;
 using Tgs.GameRecord.SBO.Core.WorkerServices;
+using Tgs.ServiceUtility;
 
 namespace Tgs.GameRecord.SBO.Core.DispatchServices;
 
@@ -48,17 +46,17 @@ internal class ScheduleDispatchService : ICommandService<ScheduleDispatchCommand
                     var startTime = endTime.AddMinutes(_intervalMinute * -1);
 
                     var workerCommand = new GameHistoryWorkerCommand(
-                         ApiUrl: command.ApiUrl,
-                         CompanyKey: command.CompanyKey,
-                         Agent: command.Agent,
-                         Portfolio: command.Portfolio,
-                         StartTime: startTime.UtcDateTime,
-                         EndTime: endTime.UtcDateTime);
+                        ApiUrl: command.ApiUrl,
+                        CompanyKey: command.CompanyKey,
+                        Agent: command.Agent,
+                        Portfolio: command.Portfolio,
+                        StartTime: startTime,
+                        EndTime: endTime);
 
-                    await _commandService
-                            .ExecuteAsync(
-                                command: workerCommand,
-                                cancellationToken: cancellationToken).ConfigureAwait(false);
+                    await _commandService.ExecuteAsync(
+                        command: workerCommand,
+                        cancellationToken: cancellationToken)
+                        .ConfigureAwait(false);
                 }
                 finally
                 {

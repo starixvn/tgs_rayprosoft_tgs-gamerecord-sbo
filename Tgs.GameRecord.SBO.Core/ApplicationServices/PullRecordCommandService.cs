@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Tgs.ServiceUtility;
-using Tgs.GameRecord.SBO.Core.ApplicationServices;
 
 namespace Tgs.GameRecord.SBO.Core.ApplicationServices;
 
@@ -19,13 +18,13 @@ internal class PullRecordCommandService : ICommandService<PullRecordCommand>
 
     public async ValueTask ExecuteAsync(PullRecordCommand command, CancellationToken cancellationToken = default)
     {
-        foreach (var record in command.Records)
+        foreach (var info in command.Infos)
         {
             try
             {
                 var recordCommand = new HandleRecordCommand(
                     GameExternalId: command.GameExternalId,
-                    Record: record);
+                    Info: info);
                 await _service
                 .ExecuteAsync(
                      command: recordCommand,
@@ -34,7 +33,7 @@ internal class PullRecordCommandService : ICommandService<PullRecordCommand>
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "遊戲紀錄處理發生例外recordhistory})", record);
+                _logger.LogError(ex, "遊戲紀錄處理發生例外{info})", info);
             }
         }
     }

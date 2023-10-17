@@ -1,6 +1,5 @@
-﻿using Tgs.ServiceUtility;
-using Tgs.GameRecord.SBO.Core;
-using Tgs.GameRecord.SBO.Core.JobApplicationServices;
+﻿using Tgs.GameRecord.SBO.Core.JobApplicationServices;
+using Tgs.ServiceUtility;
 
 namespace Tgs.GameRecord.SBO.Core;
 

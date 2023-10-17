@@ -1,9 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+﻿using System.Text;
+using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Tgs.ServiceUtility;
 using Valhalla.MessageQueue;
-using System.Text;
-using System.Text.Json;
 
 namespace Tgs.GameRecord.SBO.Core.JobApplicationServices;
 
