@@ -105,7 +105,7 @@ internal class JobInitCommandService : ICommandService<JobInitCommand>
                     ?? settingConfigurationJson["CasinoTableLimit"]?.GetValue<int>()
                     ?? throw new Exception($" Required parameters(CasinoTableLimit)");
 
-                if (gameProviderAgentMapper.ContainsKey(gameProviderConfig.Name))
+                if (gameProviderAgentMapper.ContainsKey(agent))
                 {
                     continue;
                 }
@@ -135,15 +135,15 @@ internal class JobInitCommandService : ICommandService<JobInitCommand>
                     Agent: agent,
                     Portfolio: "VirtualSports");
 
-                gameProviderAgentMapper.Add(gameProviderConfig.Name, sportsBookJobExecuteCommand);
+                gameProviderAgentMapper.Add(agent, sportsBookJobExecuteCommand);
 
                 RecurringJob.AddOrUpdate<IHangfireUtensil>(
-                    recurringJobId: $"{gameProviderConfig.Name}-{sportsBookJobExecuteCommand.Portfolio}",
+                    recurringJobId: $"{gameProviderConfig.Name}-{sportsBookJobExecuteCommand.Portfolio}|{agent}|{gameProviderConfig.GameProviderConfigId}",
                     methodCall: service => service.JobExecuteAsync(sportsBookJobExecuteCommand),
                     cronExpression: Cron.Minutely(),
                     options: _recurringJobOptions);
                 RecurringJob.AddOrUpdate<IHangfireUtensil>(
-                    recurringJobId: $"{gameProviderConfig.Name}-{virtualSportsJobExecuteCommand.Portfolio}",
+                    recurringJobId: $"{gameProviderConfig.Name}-{virtualSportsJobExecuteCommand.Portfolio}|{agent}|{gameProviderConfig.GameProviderConfigId}",
                     methodCall: service => service.JobExecuteAsync(virtualSportsJobExecuteCommand),
                     cronExpression: Cron.Minutely(),
                     options: _recurringJobOptions);
