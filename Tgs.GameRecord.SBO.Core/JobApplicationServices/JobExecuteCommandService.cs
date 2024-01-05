@@ -1,39 +1,50 @@
 ﻿using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Tgs.GameRecord.SBO.Common;
 using Tgs.ServiceUtility;
 using Valhalla.MessageQueue;
 
 namespace Tgs.GameRecord.SBO.Core.JobApplicationServices;
 
-internal class JobExecuteCommandService : ICommandService<JobExecuteCommand>
+internal class JobExecuteCommandService(
+    ILogger<JobExecuteCommandService> logger,
+    IOptions<GameRecordInfoOptions> options,
+    IMessageSender messageSender) : ICommandService<JobExecuteCommand>
 {
-    private readonly ILogger<JobExecuteCommandService> _logger;
-    private readonly IMessageSender _messageSender;
-
-    public JobExecuteCommandService(
-        ILogger<JobExecuteCommandService> logger,
-        IMessageSender messageSender)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _messageSender = messageSender ?? throw new ArgumentNullException(nameof(messageSender));
-    }
+    private readonly double _intervalMinutes = options.Value.IntervalMinutesMax < options.Value.IntervalMinutes
+        ? options.Value.IntervalMinutesMax
+        : options.Value.IntervalMinutesMinimum > options.Value.IntervalMinutes
+        ? options.Value.IntervalMinutesMinimum
+        : options.Value.IntervalMinutes;
 
     public ValueTask ExecuteAsync(JobExecuteCommand command, CancellationToken cancellationToken = default)
     {
-        var parameters = new
+        //每次查詢時間範圍最多為 15 分鐘，最新信息為 3 分鐘前，當前時間小於3分鐘會廠商會出現錯誤8006
+        //當前時間22/09/12 14:15
+        //查詢時間22/09/12 14:15~14:00會回應{"status":"8006","err_text":"Time does not meet."}
+        //查詢時間22/09/12 14:12~13:56會回應{"status":"8009","err_text":"Time interval exceeds the allowable range."}
+        //查詢時間22/09/12 14:12~13:57會回應{"status":"0000","err_text":"","data:":"[]"}
+        var endTime = DateTimeOffset.ParseExact(DateTimeOffset.UtcNow.ToString(@"yyyy-MM-dd\THH:mm:00K"), @"yyyy-MM-dd\THH:mm:ssK", null, styles: System.Globalization.DateTimeStyles.RoundtripKind);
+
+        var startTime = endTime.AddMinutes(_intervalMinutes * -1);
+
+        var parameters = new SBOGameRecordMessage
         {
-            command.ApiUrl,
-            command.CompanyKey,
-            command.Agent,
-            command.Portfolio
+            ApiUrl = command.ApiUrl,
+            CompanyKey = command.CompanyKey,
+            Agent = command.Agent,
+            Portfolio = command.Portfolio,
+            StartTime = startTime,
+            EndTime = endTime
         };
 
-        _logger.LogDebug("LogOn:{logOn} Parameters:{parameters}", DateTime.Now.ToString("u"), parameters);
+        logger.LogDebug("LogOn:{logOn} Parameters:{parameters}", DateTime.Now.ToString("u"), parameters);
 
-        return _messageSender
+        return messageSender
             .PublishAsync(
-            subject: "gp.gamerecord.schedule.sbotf",
+            subject: SBONatsConst.SchedulePublish,
             data: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(parameters)),
             cancellationToken: cancellationToken);
     }

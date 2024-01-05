@@ -1,39 +1,70 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Tgs.GameInterface.SBOService.Client;
+using Tgs.GameInterface.SBOService.Protos;
 using Tgs.ServiceUtility;
 
 namespace Tgs.GameRecord.SBO.Core.ApplicationServices;
 
-internal class PullRecordCommandService : ICommandService<PullRecordCommand>
+internal class PullRecordCommandService(
+    ILogger<PullRecordCommandService> logger,
+    IOptions<GameRecordInfoOptions> options,
+    IGameInterfaceSBOClient client,
+    ICommandService<HandleRecordCommand> service) : ICommandService<PullRecordCommand>
 {
-    private readonly ILogger<PullRecordCommandService> _logger;
-    private readonly ICommandService<HandleRecordCommand> _service;
-
-    public PullRecordCommandService(
-        ILogger<PullRecordCommandService> logger,
-        ICommandService<HandleRecordCommand> service)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _service = service ?? throw new ArgumentNullException(nameof(service));
-    }
+    private readonly GameRecordInfoOptions _gameRecordInfoOptions = options.Value;
 
     public async ValueTask ExecuteAsync(PullRecordCommand command, CancellationToken cancellationToken = default)
     {
-        foreach (var info in command.Infos)
+        var gameExternal = _gameRecordInfoOptions.GameExternals.Where(x => x.Portfolio.Equals(command.Portfolio, StringComparison.OrdinalIgnoreCase)).Single();
+
+        var gameHistoryInfos = gameExternal.Portfolio.Equals("VirtualSports", StringComparison.OrdinalIgnoreCase)
+            ? await client.GameWagerByVirtualSportsAsync(
+                apiUrl: command.ApiUrl,
+                companyKey: command.CompanyKey,
+                agent: command.Agent,
+                startTime: command.StartTime,
+                endTime: command.EndTime,
+                cancellationToken: cancellationToken)
+            .ToArrayAsync(
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false) ?? Enumerable.Empty<GameWagerInfo>()
+            : await client.GameWagerBySportsBookAsync(
+                apiUrl: command.ApiUrl,
+                companyKey: command.CompanyKey,
+                agent: command.Agent,
+                startTime: command.StartTime,
+                endTime: command.EndTime,
+                cancellationToken: cancellationToken)
+            .ToArrayAsync(
+                cancellationToken: cancellationToken)
+            .ConfigureAwait(false) ?? Enumerable.Empty<GameWagerInfo>();
+
+        logger.LogInformation("LogOn:{logOn} | Request:{request} | Response:{response}",
+            DateTime.UtcNow.ToString("O"),
+            command,
+            gameHistoryInfos);
+
+        if (!gameHistoryInfos.Any())
+        {
+            return;
+        }
+
+        foreach (var info in gameHistoryInfos)
         {
             try
             {
                 var recordCommand = new HandleRecordCommand(
-                    GameExternalId: command.GameExternalId,
+                    GameExternalId: gameExternal.GameExternalId,
                     Info: info);
-                await _service
-                .ExecuteAsync(
+                await service.ExecuteAsync(
                      command: recordCommand,
                      cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "遊戲紀錄處理發生例外{info})", info);
+                logger.LogError(ex, "遊戲紀錄處理發生例外{info})", info);
             }
         }
     }

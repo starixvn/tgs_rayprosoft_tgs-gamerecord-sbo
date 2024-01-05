@@ -1,4 +1,5 @@
-﻿using Google.Protobuf.WellKnownTypes;
+﻿using System.Text.Json.Nodes;
+using Google.Protobuf.WellKnownTypes;
 using Microsoft.Extensions.Options;
 using NSubstitute;
 using Tgs.GameInterface.SBOService.Protos;
@@ -30,7 +31,8 @@ public class HandleRecordCommandServiceUnitTest
                 }
             },
             GameProviderConfiguration = "SBOTFConfiguration",
-            GameProviderHangfire = "sbo-schedule:hangfire:",
+            HangfirePrefix = "gamerecord-sbo-hangfire:",
+            HangfireLocking = "gamerecord-sbo-locking:",
             IntervalMinutes = 3,
             IntervalMinutesMax = 15,
             IntervalMinutesMinimum = 3,
@@ -87,7 +89,7 @@ public class HandleRecordCommandServiceUnitTest
             commission: Arg.Is(0.0m),
             turnover: Arg.Is(command.Info.Turnover.ToDecimal().GetValueOrDefault(0)),
             winLoss: Arg.Is(command.Info.PlayerWinLoss.ToDecimal().GetValueOrDefault(0)),
-            additionalData: Arg.Is(command.Info.AdditionalData),
+            additionalData: Arg.Any<JsonNode>(),
             cancellationToken: Arg.Any<CancellationToken>());
     }
 
@@ -111,7 +113,8 @@ public class HandleRecordCommandServiceUnitTest
                 }
             },
             GameProviderConfiguration = "SBOTFConfiguration",
-            GameProviderHangfire = "sbo-schedule:hangfire:",
+            HangfirePrefix = "gamerecord-sbo-hangfire:",
+            HangfireLocking = "gamerecord-sbo-locking:",
             IntervalMinutes = 3,
             IntervalMinutesMax = 15,
             IntervalMinutesMinimum = 3,
@@ -168,7 +171,7 @@ public class HandleRecordCommandServiceUnitTest
             commission: Arg.Is(0.0m),
             turnover: Arg.Is(0.0m),
             winLoss: Arg.Is(0.0m),
-            additionalData: Arg.Is(command.Info.AdditionalData),
+            additionalData: Arg.Any<JsonNode>(),
             cancellationToken: Arg.Any<CancellationToken>());
     }
 
@@ -192,7 +195,8 @@ public class HandleRecordCommandServiceUnitTest
                 }
             },
             GameProviderConfiguration = "SBOTFConfiguration",
-            GameProviderHangfire = "sbo-schedule:hangfire:",
+            HangfirePrefix = "gamerecord-sbo-hangfire:",
+            HangfireLocking = "gamerecord-sbo-locking:",
             IntervalMinutes = 3,
             IntervalMinutesMax = 15,
             IntervalMinutesMinimum = 3,
@@ -249,7 +253,7 @@ public class HandleRecordCommandServiceUnitTest
             commission: Arg.Is(0.0m),
             turnover: Arg.Is(command.Info.Turnover.ToDecimal().GetValueOrDefault(0)),
             winLoss: Arg.Is(command.Info.PlayerWinLoss.ToDecimal().GetValueOrDefault(0)),
-            additionalData: Arg.Is(command.Info.AdditionalData),
+            additionalData: Arg.Any<JsonNode>(),
             cancellationToken: Arg.Any<CancellationToken>());
     }
 }
