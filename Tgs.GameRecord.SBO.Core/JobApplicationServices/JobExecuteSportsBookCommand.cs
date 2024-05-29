@@ -1,7 +1,6 @@
 ﻿namespace Tgs.GameRecord.SBO.Core.JobApplicationServices;
 
-public record JobExecuteCommand(
+public record JobExecuteSportsBookCommand(
 	Uri ApiUrl,
 	string CompanyKey,
-	string Agent,
-	string Portfolio);
+	string Agent);

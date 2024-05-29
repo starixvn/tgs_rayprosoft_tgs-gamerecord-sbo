@@ -67,7 +67,7 @@ internal class JobInitCommandService(
 				return;
 			}
 
-			var gameProviderAgentMapper = new Dictionary<string, JobExecuteCommand>();
+			var gameProviderAgentMapper = new Dictionary<string, JobExecuteSportsBookCommand>();
 
 			foreach (var gameProviderConfig in gameProviderConfigs)
 			{
@@ -119,34 +119,43 @@ internal class JobInitCommandService(
 					cancellationToken: cancellationToken)
 					.ConfigureAwait(false);
 
-				var sportsBookJobExecuteCommand = new JobExecuteCommand(
+				var jobExecuteSportsBookCommand = new JobExecuteSportsBookCommand(
 					ApiUrl: apiUrl,
 					CompanyKey: companyKey,
-					Agent: agent,
-					Portfolio: "SportsBook");
+					Agent: agent);
 
-				var virtualSportsJobExecuteCommand = new JobExecuteCommand(
+				var jobExecuteVirtualSportsCommand = new JobExecuteVirtualSportsCommand(
 					ApiUrl: apiUrl,
 					CompanyKey: companyKey,
-					Agent: agent,
-					Portfolio: "VirtualSports");
+					Agent: agent);
 
-				gameProviderAgentMapper.Add(agent, sportsBookJobExecuteCommand);
+				var jobExecuteSeamlessGameCommand = new JobExecuteSeamlessGameCommand(
+					ApiUrl: apiUrl,
+					CompanyKey: companyKey,
+					Agent: agent);
+
+				gameProviderAgentMapper.Add(agent, jobExecuteSportsBookCommand);
 
 				RecurringJob.AddOrUpdate<IHangfireUtensil>(
-					recurringJobId: $"{gameProviderConfig.Name}-{sportsBookJobExecuteCommand.Portfolio}|{agent}|{gameProviderConfig.GameProviderConfigId}",
-					methodCall: service => service.JobExecuteAsync(sportsBookJobExecuteCommand),
+					recurringJobId: $"{gameProviderConfig.Name}-SportsBook|{agent}|{gameProviderConfig.GameProviderConfigId}",
+					methodCall: service => service.JobExecuteSportsBookAsync(jobExecuteSportsBookCommand),
 					cronExpression: Cron.Minutely(),
 					options: _recurringJobOptions);
 				RecurringJob.AddOrUpdate<IHangfireUtensil>(
-					recurringJobId: $"{gameProviderConfig.Name}-{virtualSportsJobExecuteCommand.Portfolio}|{agent}|{gameProviderConfig.GameProviderConfigId}",
-					methodCall: service => service.JobExecuteAsync(virtualSportsJobExecuteCommand),
+					recurringJobId: $"{gameProviderConfig.Name}-VirtualSports|{agent}|{gameProviderConfig.GameProviderConfigId}",
+					methodCall: service => service.JobExecuteVirtualSportsAsync(jobExecuteVirtualSportsCommand),
+					cronExpression: Cron.Minutely(),
+					options: _recurringJobOptions);
+				RecurringJob.AddOrUpdate<IHangfireUtensil>(
+					recurringJobId: $"{gameProviderConfig.Name}-SeamlessGame|{agent}|{gameProviderConfig.GameProviderConfigId}",
+					methodCall: service => service.JobExecuteSeamlessGameAsync(jobExecuteSeamlessGameCommand),
 					cronExpression: Cron.Minutely(),
 					options: _recurringJobOptions);
 
 				//初始化強制第一次處理
-				_ = BackgroundJob.Enqueue<IHangfireUtensil>(service => service.JobExecuteAsync(sportsBookJobExecuteCommand));
-				_ = BackgroundJob.Enqueue<IHangfireUtensil>(service => service.JobExecuteAsync(virtualSportsJobExecuteCommand));
+				_ = BackgroundJob.Enqueue<IHangfireUtensil>(service => service.JobExecuteSportsBookAsync(jobExecuteSportsBookCommand));
+				_ = BackgroundJob.Enqueue<IHangfireUtensil>(service => service.JobExecuteVirtualSportsAsync(jobExecuteVirtualSportsCommand));
+				_ = BackgroundJob.Enqueue<IHangfireUtensil>(service => service.JobExecuteSeamlessGameAsync(jobExecuteSeamlessGameCommand));
 			}
 		}
 		catch (Exception ex)
