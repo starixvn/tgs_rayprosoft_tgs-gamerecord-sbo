@@ -98,7 +98,9 @@ builder.Services
 	.AddNatsMessageQueue(config => config
 		.ConfigureResolveConnection(sp => sp.GetRequiredKeyedService<NatsConnection>("Nats"))
 		.AddHandler<ScheduleMessageHandler>(SBONatsConst.SchedulePublish, SBONatsConst.SchedulePublish)
-		.AddHandler<ScheduleMessageHandler>(SBONatsConst.ManualPublish, SBONatsConst.ManualPublish))
+		.AddHandler<ScheduleSeamlessGameMessageHandler>(SBONatsConst.ScheduleSeamlessGamePublish, SBONatsConst.ScheduleSeamlessGamePublish)
+		.AddHandler<ScheduleMessageHandler>(SBONatsConst.ManualPublish, SBONatsConst.ManualPublish)
+		.AddHandler<ManualSeamlessGameMessageHandler>(SBONatsConst.ManualSeamlessGamePublish, SBONatsConst.ManualSeamlessGamePublish))
 	.ClearAllExchanges()
 	.AddNatsGlobPatternExchange("*");
 

@@ -8,10 +8,10 @@ using Valhalla.MessageQueue;
 
 namespace Tgs.GameRecord.SBO.Core.JobApplicationServices;
 
-internal class JobExecuteCommandService(
-	ILogger<JobExecuteCommandService> logger,
+internal class JobExecuteVirtualSportsCommandService(
+	ILogger<JobExecuteVirtualSportsCommandService> logger,
 	IOptions<GameRecordInfoOptions> options,
-	IMessageSender messageSender) : ICommandService<JobExecuteCommand>
+	IMessageSender messageSender) : ICommandService<JobExecuteVirtualSportsCommand>
 {
 	private readonly double _intervalMinutes = options.Value.IntervalMinutesMax < options.Value.IntervalMinutes
 		? options.Value.IntervalMinutesMax
@@ -19,7 +19,7 @@ internal class JobExecuteCommandService(
 		? options.Value.IntervalMinutesMinimum
 		: options.Value.IntervalMinutes;
 
-	public ValueTask ExecuteAsync(JobExecuteCommand command, CancellationToken cancellationToken = default)
+	public ValueTask ExecuteAsync(JobExecuteVirtualSportsCommand command, CancellationToken cancellationToken = default)
 	{
 		//每次查詢時間範圍最多為 15 分鐘，最新信息為 3 分鐘前，當前時間小於3分鐘會廠商會出現錯誤8006
 		//當前時間22/09/12 14:15
@@ -35,7 +35,7 @@ internal class JobExecuteCommandService(
 			ApiUrl = command.ApiUrl,
 			CompanyKey = command.CompanyKey,
 			Agent = command.Agent,
-			Portfolio = command.Portfolio,
+			Portfolio = "VirtualSports",
 			StartTime = startTime,
 			EndTime = endTime
 		};
@@ -44,7 +44,7 @@ internal class JobExecuteCommandService(
 
 		return messageSender
 			.PublishAsync(
-			subject: SBONatsConst.SchedulePublish,
+			subject: SBONatsConst.ScheduleSeamlessGamePublish,
 			data: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(parameters)),
 			cancellationToken: cancellationToken);
 	}
