@@ -9,9 +9,10 @@ data:
       "Logging": {
         "LogLevel": {
           "Default": "Warning",
-          "Grpc.Net.Client.Balancer": "Debug",
-          "Tgs.GameRecord.SBO.Messages.ManualMessageHandler": "Warning",
-          "Tgs.GameRecord.SBO.Messages.ManualSeamlessGameMessageHandler": "Warning",
+          "Grpc.Net.Client.Balancer": "Warning",
+          "Grpc.Net.Client.Balancer.DnsResolver": "Debug",
+          "Tgs.GameRecord.SBO.Messages.ManualMessageHandler": "Information",
+          "Tgs.GameRecord.SBO.Messages.ManualSeamlessGameMessageHandler": "Information",
           "Tgs.GameRecord.SBO.Messages.ScheduleMessageHandler": "Warning",
           "Tgs.GameRecord.SBO.Messages.ScheduleSeamlessGameMessageHandler": "Warning",
           "Tgs.GameRecord.SBO.Core.ApplicationServices.HandleRecordCommandService": "Warning"
