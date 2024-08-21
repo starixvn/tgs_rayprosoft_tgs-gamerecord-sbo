@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using NSubstitute;
+using Tgs.GameRecord.Handle.Client;
 using Tgs.GameRecord.SBO.Core.ApplicationServices;
-using Valhalla.MessageQueue;
 
 namespace Tgs.GameRecord.SBO.Core.UnitTest.ApplicationServices;
 
@@ -13,7 +13,7 @@ public class HandleRecordSeamlessGameCommandServiceUnitTest
 	public async Task Lose()
 	{
 		var faceLogger = NullLogger<HandleRecordSeamlessGameCommandService>.Instance;
-		var gameRecordInfo = Options.Create(new GameRecordInfoOptions
+		var fakeGameRecordInfoOptions = Options.Create(new GameRecordInfoOptions
 		{
 			GameProviderCode = "SBOTF",
 			GameExternals =
@@ -42,7 +42,12 @@ public class HandleRecordSeamlessGameCommandServiceUnitTest
 			IntervalMinutesMinimum = 3,
 			LockMinute = 2
 		});
-		var fakeMessageSender = Substitute.For<IMessageSender>();
+		var fakePolicySettingsOptions = Options.Create(new PolicySettingsOptions
+		{
+			RetryCount = 1,
+			RetrySeconds = 1,
+		});
+		var fakeGameRecordHandleClient = Substitute.For<IGameRecordHandleClient>();
 
 		var command = new HandleRecordSeamlessGameCommand(
 
@@ -63,28 +68,28 @@ public class HandleRecordSeamlessGameCommandServiceUnitTest
 				AdditionalData = "{\"mainBetRef\":null,\"gamePeriodId\":\"Funky_fkg_300344323845\",\"gameRoundId\":\"Funky_fkg_300344323845\",\"gameType\":\"FunkyGames\",\"turnoverStake\":50.000000,\"orderDetail\":\"\",\"gameResult\":\"Funky_fkg_300344323845\",\"gameId\":286,\"gpId\":16,\"isGameProviderPromotion\":false,\"orderTime\":\"2024-05-20T06:57:23.210\",\"modifyDate\":\"2024-05-20T06:57:26.900\",\"settleTime\":\"2024-05-20T06:57:26.900\",\"winLostDate\":\"2024-05-20T00:00:00.000\",\"refNo\":\"FunkyGames_55440870_Funky_fkg_300344323845\",\"username\":\"PROD_4umv4giizorc\",\"currency\":\"IDR\",\"stake\":50.000000,\"winLost\":-50.000000,\"status\":\"lose\",\"topDownline\":null}"
 			});
 
-		var service = new HandleRecordSeamlessGameCommandService(
+		var sut = new HandleRecordSeamlessGameCommandService(
 			faceLogger,
-			gameRecordInfo,
-			fakeMessageSender);
+			fakeGameRecordInfoOptions,
+			fakePolicySettingsOptions,
+			fakeGameRecordHandleClient);
 
-		await service.ExecuteAsync(command);
+		await sut.ExecuteAsync(command);
 
-		_ = fakeMessageSender
+		_ = fakeGameRecordHandleClient
 			.Received(1)
-			.PublishAsync(
-			subject: Arg.Is(Handle.Common.GameRecordHandleNatsConst.GameRecordHandleRequest),
-			data: Arg.Is(new Handle.Common.Protos.GameRecordHandleRequest
+			.HandleAsync(
+			source: Arg.Is(new Handle.Common.ViewModels.GameRecordHandleViewModel
 			{
-				GameProviderCode = gameRecordInfo.Value.GameProviderCode,
+				GameProviderCode = fakeGameRecordInfoOptions.Value.GameProviderCode,
 				PlayerCode = command.Info.PlayerCode,
 				ExternalRoundId = "Funky_fkg_300344323845",
 				ExternalBetId = "FunkyGames_55440870_Funky_fkg_300344323845",
 				ExternalGameId = "seamless_game",
-				ExternalCreatedOn = command.Info.ExternalCreatedOn,
-				ExternalClosedOn = command.Info.ExternalClosedOn,
-				ExternalPayoffOn = command.Info.ExternalClosedOn,
-				ExternalResettleOn = DateTimeOffset.UnixEpoch.ToTimestamp(),
+				ExternalCreatedOn = command.Info.ExternalCreatedOn.ToDateTimeOffset(),
+				ExternalClosedOn = command.Info.ExternalClosedOn.ToDateTimeOffset(),
+				ExternalPayoffOn = command.Info.ExternalClosedOn.ToDateTimeOffset(),
+				ExternalResettleOn = DateTimeOffset.UnixEpoch,
 				BetState = Handle.Common.Protos.BetState.Loss,
 				BetType = Handle.Common.Protos.BetType.Normal,
 				FreeGameState = Handle.Common.Protos.FreeGameState.None,
@@ -108,7 +113,7 @@ public class HandleRecordSeamlessGameCommandServiceUnitTest
 	public async Task Win()
 	{
 		var faceLogger = NullLogger<HandleRecordSeamlessGameCommandService>.Instance;
-		var gameRecordInfo = Options.Create(new GameRecordInfoOptions
+		var fakeGameRecordInfoOptions = Options.Create(new GameRecordInfoOptions
 		{
 			GameProviderCode = "SBOTF",
 			GameExternals =
@@ -137,7 +142,12 @@ public class HandleRecordSeamlessGameCommandServiceUnitTest
 			IntervalMinutesMinimum = 3,
 			LockMinute = 2
 		});
-		var fakeMessageSender = Substitute.For<IMessageSender>();
+		var fakePolicySettingsOptions = Options.Create(new PolicySettingsOptions
+		{
+			RetryCount = 1,
+			RetrySeconds = 1,
+		});
+		var fakeGameRecordHandleClient = Substitute.For<IGameRecordHandleClient>();
 
 		var command = new HandleRecordSeamlessGameCommand(
 
@@ -158,28 +168,28 @@ public class HandleRecordSeamlessGameCommandServiceUnitTest
 				AdditionalData = "{\"mainBetRef\":null,\"gamePeriodId\":\"Funky_fkg_300344324325\",\"gameRoundId\":\"Funky_fkg_300344324325\",\"gameType\":\"FunkyGames\",\"turnoverStake\":1.000000,\"orderDetail\":\"\",\"gameResult\":\"Funky_fkg_300344324325\",\"gameId\":285,\"gpId\":16,\"isGameProviderPromotion\":false,\"orderTime\":\"2024-05-20T06:58:42.047\",\"modifyDate\":\"2024-05-20T06:58:47.467\",\"settleTime\":\"2024-05-20T06:58:47.467\",\"winLostDate\":\"2024-05-20T00:00:00.000\",\"refNo\":\"FunkyGames_55440870_Funky_fkg_300344324325\",\"username\":\"PROD_4umv4giizorc\",\"currency\":\"IDR\",\"stake\":1.000000,\"winLost\":0.660000,\"status\":\"won\",\"topDownline\":null}"
 			});
 
-		var service = new HandleRecordSeamlessGameCommandService(
+		var sut = new HandleRecordSeamlessGameCommandService(
 			faceLogger,
-			gameRecordInfo,
-			fakeMessageSender);
+			fakeGameRecordInfoOptions,
+			fakePolicySettingsOptions,
+			fakeGameRecordHandleClient);
 
-		await service.ExecuteAsync(command);
+		await sut.ExecuteAsync(command);
 
-		_ = fakeMessageSender
+		_ = fakeGameRecordHandleClient
 			.Received(1)
-			.PublishAsync(
-			subject: Arg.Is(Handle.Common.GameRecordHandleNatsConst.GameRecordHandleRequest),
-			data: Arg.Is(new Handle.Common.Protos.GameRecordHandleRequest
+			.HandleAsync(
+			source: Arg.Is(new Handle.Common.ViewModels.GameRecordHandleViewModel
 			{
-				GameProviderCode = gameRecordInfo.Value.GameProviderCode,
+				GameProviderCode = fakeGameRecordInfoOptions.Value.GameProviderCode,
 				PlayerCode = command.Info.PlayerCode,
 				ExternalRoundId = "Funky_fkg_300344324325",
 				ExternalBetId = "FunkyGames_55440870_Funky_fkg_300344324325",
 				ExternalGameId = "seamless_game",
-				ExternalCreatedOn = command.Info.ExternalCreatedOn,
-				ExternalClosedOn = command.Info.ExternalClosedOn,
-				ExternalPayoffOn = command.Info.ExternalClosedOn,
-				ExternalResettleOn = DateTimeOffset.UnixEpoch.ToTimestamp(),
+				ExternalCreatedOn = command.Info.ExternalCreatedOn.ToDateTimeOffset(),
+				ExternalClosedOn = command.Info.ExternalClosedOn.ToDateTimeOffset(),
+				ExternalPayoffOn = command.Info.ExternalClosedOn.ToDateTimeOffset(),
+				ExternalResettleOn = DateTimeOffset.UnixEpoch,
 				BetState = Handle.Common.Protos.BetState.Win,
 				BetType = Handle.Common.Protos.BetType.Normal,
 				FreeGameState = Handle.Common.Protos.FreeGameState.None,

@@ -17,25 +17,13 @@ public class SBOController : ControllerBase
 	/// <param name="messageSender">The message sender.</param>
 	/// <param name="source">The source.</param>
 	/// <returns></returns>
-	/// <remarks>
-	/// <b>Example</b><br />
-	///
-	///     Post
-	///         {
-	///             "apiUrl": "https://ex-api-yy.xxttgg.com",
-	///             "companyKey": "A54D5BCEEE204E4EB799E6BB4E617937",
-	///             "agent": "PROD_SBO",
-	///             "startTime": "2024-05-20T00:00:00Z",
-	///             "endTime": "2024-05-21T00:00:00Z"
-	///         }
-	/// </remarks>
 	[HttpPost("schedule/sportsbook")]
 	public ValueTask GameRecordScheduleSportsBookAsync(
 		[FromServices] IMessageSender messageSender,
-		SBOGameRecordMessage source)
+		SBOGameRecordViewModel source)
 		=> messageSender.PublishAsync(
 			subject: SBONatsConst.SchedulePublish,
-			data: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new SBOGameRecordMessage
+			data: JsonSerializer.SerializeToUtf8Bytes(new SBOGameRecordMessage
 			{
 				ApiUrl = source.ApiUrl,
 				Agent = source.Agent,
@@ -43,7 +31,7 @@ public class SBOController : ControllerBase
 				Portfolio = "SportsBook",
 				StartTime = source.StartTime,
 				EndTime = source.EndTime
-			})),
+			}),
 			cancellationToken: HttpContext.RequestAborted);
 
 	/// <summary>
@@ -52,25 +40,13 @@ public class SBOController : ControllerBase
 	/// <param name="messageSender">The message sender.</param>
 	/// <param name="source">The source.</param>
 	/// <returns></returns>
-	/// <remarks>
-	/// <b>Example</b><br />
-	///
-	///     Post
-	///         {
-	///             "apiUrl": "https://ex-api-yy.xxttgg.com",
-	///             "companyKey": "A54D5BCEEE204E4EB799E6BB4E617937",
-	///             "agent": "PROD_SBO",
-	///             "startTime": "2024-05-20T00:00:00Z",
-	///             "endTime": "2024-05-21T00:00:00Z"
-	///         }
-	/// </remarks>
 	[HttpPost("schedule/virtualsports")]
 	public ValueTask GameRecordScheduleVirtualSportsAsync(
 		[FromServices] IMessageSender messageSender,
-		SBOGameRecordMessage source)
+		SBOGameRecordViewModel source)
 		=> messageSender.PublishAsync(
 			subject: SBONatsConst.SchedulePublish,
-			data: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new SBOGameRecordMessage
+			data: JsonSerializer.SerializeToUtf8Bytes(new SBOGameRecordMessage
 			{
 				ApiUrl = source.ApiUrl,
 				Agent = source.Agent,
@@ -78,7 +54,7 @@ public class SBOController : ControllerBase
 				Portfolio = "VirtualSports",
 				StartTime = source.StartTime,
 				EndTime = source.EndTime
-			})),
+			}),
 			cancellationToken: HttpContext.RequestAborted);
 
 	/// <summary>
@@ -87,25 +63,13 @@ public class SBOController : ControllerBase
 	/// <param name="messageSender">The message sender.</param>
 	/// <param name="source">The source.</param>
 	/// <returns></returns>
-	/// <remarks>
-	/// <b>Example</b><br />
-	///
-	///     Post
-	///         {
-	///             "apiUrl": "https://ex-api-yy.xxttgg.com",
-	///             "companyKey": "A54D5BCEEE204E4EB799E6BB4E617937",
-	///             "agent": "PROD_SBO",
-	///             "startTime": "2024-05-20T00:00:00Z",
-	///             "endTime": "2024-05-21T00:00:00Z"
-	///         }
-	/// </remarks>
 	[HttpPost("schedule/seamlessgame")]
 	public ValueTask GameRecordScheduleSeamlessGameAsync(
 		[FromServices] IMessageSender messageSender,
-		SBOGameRecordMessage source)
+		SBOGameRecordViewModel source)
 		=> messageSender.PublishAsync(
 			subject: SBONatsConst.ScheduleSeamlessGamePublish,
-			data: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new SBOGameRecordMessage
+			data: JsonSerializer.SerializeToUtf8Bytes(new SBOGameRecordMessage
 			{
 				ApiUrl = source.ApiUrl,
 				Agent = source.Agent,
@@ -113,7 +77,7 @@ public class SBOController : ControllerBase
 				Portfolio = "SeamlessGame",
 				StartTime = source.StartTime,
 				EndTime = source.EndTime
-			})),
+			}),
 			cancellationToken: HttpContext.RequestAborted);
 
 	/// <summary>
@@ -122,25 +86,13 @@ public class SBOController : ControllerBase
 	/// <param name="messageSender">The message sender.</param>
 	/// <param name="source">The source.</param>
 	/// <returns></returns>
-	/// <remarks>
-	/// <b>Example</b><br />
-	///
-	///     Post
-	///         {
-	///             "apiUrl": "https://ex-api-yy.xxttgg.com",
-	///             "companyKey": "A54D5BCEEE204E4EB799E6BB4E617937",
-	///             "agent": "PROD_SBO",
-	///             "startTime": "2024-05-20T00:00:00Z",
-	///             "endTime": "2024-05-21T00:00:00Z"
-	///         }
-	/// </remarks>
 	[HttpPost("manual/sportsbook")]
 	public ValueTask GameRecordManualAsync(
 		[FromServices] IMessageSender messageSender,
 		SBOGameRecordViewModel source)
 		=> messageSender.PublishAsync(
 			subject: SBONatsConst.ManualPublish,
-			data: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new SBOGameRecordMessage
+			data: JsonSerializer.SerializeToUtf8Bytes(new SBOGameRecordMessage
 			{
 				ApiUrl = source.ApiUrl,
 				Agent = source.Agent,
@@ -148,7 +100,7 @@ public class SBOController : ControllerBase
 				Portfolio = "SportsBook",
 				StartTime = source.StartTime,
 				EndTime = source.EndTime
-			})),
+			}),
 			cancellationToken: HttpContext.RequestAborted);
 
 	/// <summary>
@@ -157,25 +109,13 @@ public class SBOController : ControllerBase
 	/// <param name="messageSender">The message sender.</param>
 	/// <param name="source">The source.</param>
 	/// <returns></returns>
-	/// <remarks>
-	/// <b>Example</b><br />
-	///
-	///     Post
-	///         {
-	///             "apiUrl": "https://ex-api-yy.xxttgg.com",
-	///             "companyKey": "A54D5BCEEE204E4EB799E6BB4E617937",
-	///             "agent": "PROD_SBO",
-	///             "startTime": "2024-05-20T00:00:00Z",
-	///             "endTime": "2024-05-21T00:00:00Z"
-	///         }
-	/// </remarks>
 	[HttpPost("manual/virtualsports")]
 	public ValueTask GameRecordManualVirtualSportsAsync(
 		[FromServices] IMessageSender messageSender,
 		SBOGameRecordViewModel source)
 		=> messageSender.PublishAsync(
 			subject: SBONatsConst.ManualPublish,
-			data: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new SBOGameRecordMessage
+			data: JsonSerializer.SerializeToUtf8Bytes(new SBOGameRecordMessage
 			{
 				ApiUrl = source.ApiUrl,
 				Agent = source.Agent,
@@ -183,7 +123,7 @@ public class SBOController : ControllerBase
 				Portfolio = "VirtualSports",
 				StartTime = source.StartTime,
 				EndTime = source.EndTime
-			})),
+			}),
 			cancellationToken: HttpContext.RequestAborted);
 
 	/// <summary>
@@ -192,25 +132,13 @@ public class SBOController : ControllerBase
 	/// <param name="messageSender">The message sender.</param>
 	/// <param name="source">The source.</param>
 	/// <returns></returns>
-	/// <remarks>
-	/// <b>Example</b><br />
-	///
-	///     Post
-	///         {
-	///             "apiUrl": "https://ex-api-yy.xxttgg.com",
-	///             "companyKey": "A54D5BCEEE204E4EB799E6BB4E617937",
-	///             "agent": "PROD_SBO",
-	///             "startTime": "2024-05-20T00:00:00Z",
-	///             "endTime": "2024-05-21T00:00:00Z"
-	///         }
-	/// </remarks>
 	[HttpPost("manual/seamlessgame")]
 	public ValueTask GameRecordManualSeamlessGameAsync(
 		[FromServices] IMessageSender messageSender,
-		SBOGameRecordMessage source)
+		SBOGameRecordViewModel source)
 		=> messageSender.PublishAsync(
 			subject: SBONatsConst.ManualSeamlessGamePublish,
-			data: Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new SBOGameRecordMessage
+			data: JsonSerializer.SerializeToUtf8Bytes(new SBOGameRecordMessage
 			{
 				ApiUrl = source.ApiUrl,
 				Agent = source.Agent,
@@ -218,6 +146,6 @@ public class SBOController : ControllerBase
 				Portfolio = "SeamlessGame",
 				StartTime = source.StartTime,
 				EndTime = source.EndTime
-			})),
+			}),
 			cancellationToken: HttpContext.RequestAborted);
 }
