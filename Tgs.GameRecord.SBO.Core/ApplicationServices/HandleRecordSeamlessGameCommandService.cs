@@ -1,19 +1,20 @@
-﻿using System.Text.Json.Nodes;
-using Google.Protobuf.WellKnownTypes;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Polly;
 using Tgs.GameInterface.SBOService.Protos;
+using Tgs.GameRecord.Handle.Client;
 using Tgs.ServiceUtility;
-using Valhalla.MessageQueue;
 
 namespace Tgs.GameRecord.SBO.Core.ApplicationServices;
 
 internal class HandleRecordSeamlessGameCommandService(
 	ILogger<HandleRecordSeamlessGameCommandService> logger,
-	IOptions<GameRecordInfoOptions> options,
-	IMessageSender messageSender) : ICommandService<HandleRecordSeamlessGameCommand>
+	IOptions<GameRecordInfoOptions> gameRecordInfoOptions,
+	IOptions<PolicySettingsOptions> policySettingsOptions,
+	IGameRecordHandleClient client) : ICommandService<HandleRecordSeamlessGameCommand>
 {
-	private readonly GameRecordInfoOptions _gameRecordInfo = options.Value;
+	private readonly GameRecordInfoOptions _gameRecordInfoOptions = gameRecordInfoOptions.Value;
+	private readonly PolicySettingsOptions _policySettingsOptions = policySettingsOptions.Value;
 
 	public async ValueTask ExecuteAsync(HandleRecordSeamlessGameCommand command, CancellationToken cancellationToken = default)
 	{
@@ -37,17 +38,17 @@ internal class HandleRecordSeamlessGameCommandService(
 			winLoss = command.Info.WinLoss.ToDecimal().GetValueOrDefault(0);
 		}
 
-		var request = new Handle.Common.Protos.GameRecordHandleRequest
+		var source = new Handle.Common.ViewModels.GameRecordHandleViewModel
 		{
-			GameProviderCode = _gameRecordInfo.GameProviderCode,
+			GameProviderCode = _gameRecordInfoOptions.GameProviderCode,
 			PlayerCode = command.Info.PlayerCode,
 			ExternalRoundId = command.Info.ExternalRoundId,
 			ExternalBetId = command.Info.ExternalWagerId,
 			ExternalGameId = command.ExternalGameId,
-			ExternalCreatedOn = command.Info.ExternalCreatedOn,
-			ExternalClosedOn = externalClosedOn.ToTimestamp(),
-			ExternalPayoffOn = externalClosedOn.ToTimestamp(),
-			ExternalResettleOn = DateTimeOffset.UnixEpoch.ToTimestamp(),
+			ExternalCreatedOn = command.Info.ExternalCreatedOn.ToDateTimeOffset(),
+			ExternalClosedOn = externalClosedOn,
+			ExternalPayoffOn = externalClosedOn,
+			ExternalResettleOn = DateTimeOffset.UnixEpoch,
 			BetState = betState,
 			BetType = Handle.Common.Protos.BetType.Normal,
 			FreeGameState = Handle.Common.Protos.FreeGameState.None,
@@ -65,25 +66,36 @@ internal class HandleRecordSeamlessGameCommandService(
 			AdditionalData = command.Info.AdditionalData
 		};
 
-		await messageSender.PublishAsync(
-			subject: Handle.Common.GameRecordHandleNatsConst.GameRecordHandleRequest,
-			data: request,
-			cancellationToken: cancellationToken)
-			.ConfigureAwait(false);
+		var retryCount = _policySettingsOptions.RetryCount;
+		var retrySeconds = _policySettingsOptions.RetrySeconds;
+		var retryPolicy = Policy
+			.Handle<HttpRequestException>()
+			.WaitAndRetryAsync(
+				retryCount: retryCount,
+				retryAttempt => TimeSpan.FromSeconds(Math.Pow(retrySeconds, retryAttempt)),
+				onRetry: (exception, retryTime, retryCount, context) => logger.LogWarning(exception, "{logWarning}",
+					new
+					{
+						LogOn = DateTime.Now.ToString("u"),
+						RetryTime = retryTime,
+						RetryCount = retryCount,
+						Data = new
+						{
+							source.GameProviderCode,
+							source.PlayerCode,
+							source.ExternalRoundId,
+							source.ExternalBetId,
+							source.ExternalGameId,
+							ExternalCreatedOn = source.ExternalCreatedOn.ToString("u"),
+							ExternalClosedOn = source.ExternalClosedOn.ToString("u"),
+							source.BetState
+						},
+						exception.Message
+					}));
 
-		logger.LogInformation("LogOn:{logOn} Subject:{subject} Mesaage:This publication requests information.({request})",
-			DateTime.Now.ToString("o"),
-			Handle.Common.GameRecordHandleNatsConst.GameRecordHandleRequest,
-			new
-			{
-				request.GameProviderCode,
-				request.PlayerCode,
-				request.ExternalRoundId,
-				request.ExternalBetId,
-				request.ExternalGameId,
-				ExternalCreatedOn = request.ExternalCreatedOn.ToDateTimeOffset(),
-				ExternalClosedOn = request.ExternalClosedOn.ToDateTimeOffset(),
-				request.BetState
-			});
+		await retryPolicy.ExecuteAsync(() => client.HandleAsync(
+			source: source,
+			cancellationToken: cancellationToken).AsTask())
+			.ConfigureAwait(false);
 	}
 }

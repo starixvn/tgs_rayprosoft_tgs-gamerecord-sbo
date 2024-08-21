@@ -14,7 +14,7 @@ namespace Tgs.GameRecord.SBO.Core.JobApplicationServices;
 internal class JobInitCommandService(
 	ILogger<JobInitCommandService> logger,
 	IOptions<GameRecordInfoOptions> options,
-	IHangfireLock hangfireLock,
+	IHangfireLockRepository hangfireLock,
 	IGameCommandClient client,
 	IGameInterfaceSBOClient gameInterfaceSBOClient) : ICommandService<JobInitCommand>
 {
@@ -136,26 +136,26 @@ internal class JobInitCommandService(
 
 				gameProviderAgentMapper.Add(agent, jobExecuteSportsBookCommand);
 
-				RecurringJob.AddOrUpdate<IHangfireUtensil>(
+				RecurringJob.AddOrUpdate<IHangfireUtensilRepository>(
 					recurringJobId: $"{gameProviderConfig.Name}-SportsBook|{agent}|{gameProviderConfig.GameProviderConfigId}",
 					methodCall: service => service.JobExecuteSportsBookAsync(jobExecuteSportsBookCommand),
 					cronExpression: Cron.Minutely(),
 					options: _recurringJobOptions);
-				RecurringJob.AddOrUpdate<IHangfireUtensil>(
+				RecurringJob.AddOrUpdate<IHangfireUtensilRepository>(
 					recurringJobId: $"{gameProviderConfig.Name}-VirtualSports|{agent}|{gameProviderConfig.GameProviderConfigId}",
 					methodCall: service => service.JobExecuteVirtualSportsAsync(jobExecuteVirtualSportsCommand),
 					cronExpression: Cron.Minutely(),
 					options: _recurringJobOptions);
-				RecurringJob.AddOrUpdate<IHangfireUtensil>(
+				RecurringJob.AddOrUpdate<IHangfireUtensilRepository>(
 					recurringJobId: $"{gameProviderConfig.Name}-SeamlessGame|{agent}|{gameProviderConfig.GameProviderConfigId}",
 					methodCall: service => service.JobExecuteSeamlessGameAsync(jobExecuteSeamlessGameCommand),
 					cronExpression: Cron.Minutely(),
 					options: _recurringJobOptions);
 
 				//初始化強制第一次處理
-				_ = BackgroundJob.Enqueue<IHangfireUtensil>(service => service.JobExecuteSportsBookAsync(jobExecuteSportsBookCommand));
-				_ = BackgroundJob.Enqueue<IHangfireUtensil>(service => service.JobExecuteVirtualSportsAsync(jobExecuteVirtualSportsCommand));
-				_ = BackgroundJob.Enqueue<IHangfireUtensil>(service => service.JobExecuteSeamlessGameAsync(jobExecuteSeamlessGameCommand));
+				_ = BackgroundJob.Enqueue<IHangfireUtensilRepository>(service => service.JobExecuteSportsBookAsync(jobExecuteSportsBookCommand));
+				_ = BackgroundJob.Enqueue<IHangfireUtensilRepository>(service => service.JobExecuteVirtualSportsAsync(jobExecuteVirtualSportsCommand));
+				_ = BackgroundJob.Enqueue<IHangfireUtensilRepository>(service => service.JobExecuteSeamlessGameAsync(jobExecuteSeamlessGameCommand));
 			}
 		}
 		catch (Exception ex)
@@ -164,7 +164,7 @@ internal class JobInitCommandService(
 		}
 		finally
 		{
-			_ = BackgroundJob.Schedule<IHangfireUtensil>(service => service.JobCheckAsync(), TimeSpan.FromMinutes(1));
+			_ = BackgroundJob.Schedule<IHangfireUtensilRepository>(service => service.JobCheckAsync(), TimeSpan.FromMinutes(1));
 		}
 	}
 }

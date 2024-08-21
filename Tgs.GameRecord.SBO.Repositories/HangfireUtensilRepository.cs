@@ -1,14 +1,16 @@
-﻿using Tgs.GameRecord.SBO.Core.JobApplicationServices;
+﻿using Tgs.GameRecord.SBO.Core;
+
+using Tgs.GameRecord.SBO.Core.JobApplicationServices;
 using Tgs.ServiceUtility;
 
-namespace Tgs.GameRecord.SBO.Core;
+namespace Tgs.GameRecord.SBO.Repositories;
 
-internal class HangfireUtensil(
+internal class HangfireUtensilRepository(
 	ICommandService<JobCheckCommand> jobCheckService,
 	ICommandService<JobExecuteSeamlessGameCommand> jobExecuteSeamlessGameService,
 	ICommandService<JobExecuteSportsBookCommand> jobExecuteSportsBookService,
 	ICommandService<JobExecuteVirtualSportsCommand> jobExecuteVirtualSportsService,
-	ICommandService<JobInitCommand> jobInitservice) : IHangfireUtensil
+	ICommandService<JobInitCommand> jobInitservice) : IHangfireUtensilRepository
 {
 	public Task JobCheckAsync()
 		=> jobCheckService.ExecuteAsync(new()).AsTask();
